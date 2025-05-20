@@ -45,4 +45,14 @@ public class RegionService {
         repository.save(entity);
         return newDto;
     }
+
+    public Boolean delete(Integer id){
+        Optional<RegionEntity> optional = repository.findById(id);
+        if (optional.isEmpty()){
+            return Boolean.FALSE;
+        }
+        repository.deleteById(id);
+        return Boolean.TRUE;
+
+    }
 }

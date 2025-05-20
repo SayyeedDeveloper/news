@@ -23,4 +23,9 @@ public class RegionController {
     public ResponseEntity<RegionDTO> update(@PathVariable("id") Integer id, @RequestBody RegionDTO newDto){
         return ResponseEntity.ok(service.update(id, newDto));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id){
+        return ResponseEntity.ok(service.delete(id));
+    }
 }

@@ -22,3 +22,7 @@ Content-Type: application/json
   "nameEn": "Tashkent",
   "regionKey": 1
 }
+
+
+### Delete Region (by id)
+DELETE localhost:8080/api/region/2
