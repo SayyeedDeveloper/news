@@ -7,5 +7,18 @@ Content-Type: application/json
   "nameUz": "Salom",
   "nameRu": "Privet",
   "nameEn": "Hello",
-  "regionKey": "1"
+  "regionKey": 1
+}
+
+
+### Update Region
+PUT localhost:8080/api/region/1
+Content-Type: application/json
+
+{
+  "orderNumber": 1,
+  "nameUz": "Toshkent",
+  "nameRu": "Ташкент",
+  "nameEn": "Tashkent",
+  "regionKey": 1
 }

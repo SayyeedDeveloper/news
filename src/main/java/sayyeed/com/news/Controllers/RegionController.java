@@ -18,4 +18,9 @@ public class RegionController {
     public ResponseEntity<RegionDTO> create(@RequestBody RegionDTO dto){
         return ResponseEntity.ok(service.create(dto));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RegionDTO> update(@PathVariable("id") Integer id, @RequestBody RegionDTO newDto){
+        return ResponseEntity.ok(service.update(id, newDto));
+    }
 }

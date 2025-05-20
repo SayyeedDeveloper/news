@@ -7,6 +7,7 @@ import sayyeed.com.news.Entities.RegionEntity;
 import sayyeed.com.news.Repositories.RegionRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class RegionService {
@@ -26,5 +27,22 @@ public class RegionService {
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreated_date());
         return dto;
+    }
+
+    public RegionDTO update(Integer id, RegionDTO newDto){
+        Optional<RegionEntity> optional = repository.findById(id);
+        if (optional.isEmpty()){
+            return null;
+        }
+        RegionEntity entity = optional.get();
+        entity.setOrder_number(newDto.getOrderNumber());
+        entity.setNameUz(newDto.getNameUz());
+        entity.setNameRu(newDto.getNameRu());
+        entity.setNameEn(newDto.getNameEn());
+        entity.setRegionKey(newDto.getRegionKey());
+        newDto.setId(entity.getId());
+        newDto.setCreatedDate(entity.getCreated_date());
+        repository.save(entity);
+        return newDto;
     }
 }
