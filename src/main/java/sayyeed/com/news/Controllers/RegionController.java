@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.DTOs.RegionDTO;
 import sayyeed.com.news.Services.RegionService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/region")
 public class RegionController {
@@ -28,5 +30,10 @@ public class RegionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id){
         return ResponseEntity.ok(service.delete(id));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<RegionDTO>> get() {
+        return ResponseEntity.ok(service.getAll());
     }
 }

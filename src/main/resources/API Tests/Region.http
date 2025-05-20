@@ -3,11 +3,11 @@ POST localhost:8080/api/region
 Content-Type: application/json
 
 {
-  "orderNumber": 1,
-  "nameUz": "Andijon",
-  "nameRu": "Андижан",
-  "nameEn": "Andijan",
-  "regionKey": 60
+  "orderNumber": 2,
+  "nameUz": "Samarqand",
+  "nameRu": "Самарканд",
+  "nameEn": "Samarkand",
+  "regionKey": 80
 }
 
 
@@ -25,4 +25,9 @@ Content-Type: application/json
 
 
 ### Delete Region (by id)
-DELETE localhost:8080/api/region/5
+DELETE localhost:8080/api/region/7
+
+
+### Get all Regions
+GET localhost:8080/api/region
+

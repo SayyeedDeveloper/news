@@ -8,6 +8,8 @@ import sayyeed.com.news.Exceptions.NotFoundException;
 import sayyeed.com.news.Repositories.RegionRepository;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -58,4 +60,24 @@ public class RegionService {
         return Boolean.TRUE;
 
     }
+
+    public List<RegionDTO> getAll(){
+        Iterable<RegionEntity> iterable = repository.findAllByVisibleIsTrue();
+        List<RegionDTO> dtos = new LinkedList<>();
+        iterable.forEach(entity -> dtos.add(toDto(entity)));
+        return dtos;
+    }
+
+    private RegionDTO toDto(RegionEntity entity){
+        RegionDTO dto = new RegionDTO();
+        dto.setId(entity.getId());
+        dto.setOrderNumber(entity.getOrder_number());
+        dto.setNameUz(entity.getNameUz());
+        dto.setNameRu(entity.getNameRu());
+        dto.setNameEn(entity.getNameEn());
+        dto.setRegionKey(entity.getRegionKey());
+        dto.setCreatedDate(entity.getCreated_date());
+        return dto;
+    }
+
 }
