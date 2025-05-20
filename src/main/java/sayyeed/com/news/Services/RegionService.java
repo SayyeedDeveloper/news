@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.RegionDTO;
 import sayyeed.com.news.Entities.RegionEntity;
+import sayyeed.com.news.Exceptions.NotFoundException;
 import sayyeed.com.news.Repositories.RegionRepository;
 
 import java.time.LocalDateTime;
@@ -31,8 +32,8 @@ public class RegionService {
 
     public RegionDTO update(Integer id, RegionDTO newDto){
         Optional<RegionEntity> optional = repository.findById(id);
-        if (optional.isEmpty()){
-            return null;
+        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
+            throw new NotFoundException("Region not found");
         }
         RegionEntity entity = optional.get();
         entity.setOrder_number(newDto.getOrderNumber());
@@ -48,10 +49,12 @@ public class RegionService {
 
     public Boolean delete(Integer id){
         Optional<RegionEntity> optional = repository.findById(id);
-        if (optional.isEmpty()){
-            return Boolean.FALSE;
+        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
+            throw new NotFoundException("Region not found");
         }
-        repository.deleteById(id);
+        RegionEntity entity = optional.get();
+        entity.setVisible(Boolean.FALSE);
+        repository.save(entity);
         return Boolean.TRUE;
 
     }

@@ -33,7 +33,7 @@ public class RegionEntity {
     private Integer regionKey;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean visible;
+    private Boolean visible = true;
 
     @Column
     private LocalDateTime created_date;

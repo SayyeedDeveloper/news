@@ -3,7 +3,7 @@ POST localhost:8080/api/region
 Content-Type: application/json
 
 {
-  "orderNumber": 5,
+  "orderNumber": 1,
   "nameUz": "Andijon",
   "nameRu": "Андижан",
   "nameEn": "Andijan",
@@ -12,13 +12,17 @@ Content-Type: application/json
 
 
 ### Update Region
-PUT localhost:8080/api/region/3
+PUT localhost:8080/api/region/5
 Content-Type: application/json
 
 {
-  "regionKey": 61
+  "orderNumber": 1,
+  "nameUz": "Andijon",
+  "nameRu": "Андижан",
+  "nameEn": "Andijan",
+  "regionKey": 65
 }
 
 
 ### Delete Region (by id)
-DELETE localhost:8080/api/region/2
+DELETE localhost:8080/api/region/5
