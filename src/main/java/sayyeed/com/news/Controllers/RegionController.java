@@ -1,6 +1,7 @@
 package sayyeed.com.news.Controllers;
 
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class RegionController {
     private RegionService service;
 
     @PostMapping("")
-    public ResponseEntity<RegionDTO> create(@RequestBody RegionDTO dto){
+    public ResponseEntity<RegionDTO> create(@Valid @RequestBody RegionDTO dto){
         return ResponseEntity.ok(service.create(dto));
     }
 

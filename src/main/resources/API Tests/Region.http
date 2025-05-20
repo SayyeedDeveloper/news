@@ -3,24 +3,20 @@ POST localhost:8080/api/region
 Content-Type: application/json
 
 {
-  "orderNumber": 1,
-  "nameUz": "Salom",
-  "nameRu": "Privet",
-  "nameEn": "Hello",
-  "regionKey": 1
+  "orderNumber": 5,
+  "nameUz": "Andijon",
+  "nameRu": "Андижан",
+  "nameEn": "Andijan",
+  "regionKey": 60
 }
 
 
 ### Update Region
-PUT localhost:8080/api/region/1
+PUT localhost:8080/api/region/3
 Content-Type: application/json
 
 {
-  "orderNumber": 1,
-  "nameUz": "Toshkent",
-  "nameRu": "Ташкент",
-  "nameEn": "Tashkent",
-  "regionKey": 1
+  "regionKey": 61
 }
 
 
