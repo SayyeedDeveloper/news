@@ -1,6 +1,7 @@
 package sayyeed.com.news.Entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +32,7 @@ public class RegionEntity {
     @Column
     private Integer regionKey;
 
-    @Column
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean visible;
 
     @Column
