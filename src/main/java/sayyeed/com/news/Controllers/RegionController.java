@@ -2,8 +2,9 @@ package sayyeed.com.news.Controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import sayyeed.com.news.DTOs.RegionDTO;
 import sayyeed.com.news.Services.RegionService;
 
 @RestController
@@ -13,4 +14,8 @@ public class RegionController {
     @Autowired
     private RegionService service;
 
+    @PostMapping("")
+    public ResponseEntity<RegionDTO> create(@RequestBody RegionDTO dto){
+        return ResponseEntity.ok(service.create(dto));
+    }
 }

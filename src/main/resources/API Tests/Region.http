@@ -1,0 +1,11 @@
+### Create Region
+POST localhost:8080/api/region
+Content-Type: application/json
+
+{
+  "orderNumber": 1,
+  "nameUz": "Salom",
+  "nameRu": "Privet",
+  "nameEn": "Hello",
+  "regionKey": "1"
+}
