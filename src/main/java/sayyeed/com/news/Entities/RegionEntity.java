@@ -1,7 +1,6 @@
 package sayyeed.com.news.Entities;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +16,7 @@ public class RegionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
+    @Column(unique = true)
     private Integer order_number;
 
     @Column
