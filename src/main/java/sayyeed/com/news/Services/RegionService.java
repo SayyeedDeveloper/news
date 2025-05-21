@@ -70,7 +70,7 @@ public class RegionService {
     }
 
     public List<RegionDTO> getAll(){
-        Iterable<RegionEntity> iterable = repository.findAllByVisibleIsTrue();
+        Iterable<RegionEntity> iterable = repository.findAllByOrder_numberSorted();
         List<RegionDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toDto(entity)));
         return dtos;
