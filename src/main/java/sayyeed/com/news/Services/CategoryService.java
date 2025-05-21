@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.CategoryDTO;
+import sayyeed.com.news.DTOs.LangResponseDTO;
 import sayyeed.com.news.DTOs.RegionDTO;
 import sayyeed.com.news.Entities.CategoryEntity;
 import sayyeed.com.news.Entities.RegionEntity;
@@ -80,6 +81,13 @@ public class CategoryService {
         return dtos;
     }
 
+    public List<LangResponseDTO> getAllbyLang(String lang){
+        Iterable<CategoryEntity> iterable = repository.getAllByOrderSorted();
+        List<LangResponseDTO> dtos = new LinkedList<>();
+        iterable.forEach(entity -> dtos.add(toLangResponseDto(lang, entity)));
+        return dtos;
+    }
+
     private CategoryDTO toDto(CategoryEntity entity){
         CategoryDTO dto = new CategoryDTO();
         dto.setId(entity.getId());
@@ -89,6 +97,24 @@ public class CategoryService {
         dto.setNameEn(entity.getNameEn());
         dto.setCategoryKey(entity.getCategoryKey());
         dto.setCreatedDate(entity.getCreated_date());
+        return dto;
+    }
+
+    private LangResponseDTO toLangResponseDto(String lang, CategoryEntity entity){
+        LangResponseDTO dto = new LangResponseDTO();
+        dto.setId(entity.getId());
+        dto.setKey(entity.getCategoryKey());
+        switch (lang){
+            case "uz":
+                dto.setName(entity.getNameUz());
+                break;
+            case"ru":
+                dto.setName(entity.getNameRu());
+                break;
+            case "en":
+                dto.setName(entity.getNameEn());
+                break;
+        }
         return dto;
     }
 }

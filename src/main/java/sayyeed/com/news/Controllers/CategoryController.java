@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.DTOs.CategoryDTO;
+import sayyeed.com.news.DTOs.LangResponseDTO;
 import sayyeed.com.news.Services.CategoryService;
 
 import java.util.List;
@@ -34,5 +35,10 @@ public class CategoryController {
     @GetMapping("")
     public ResponseEntity<List<CategoryDTO>> getAllByOrder(){
         return ResponseEntity.ok(service.getAllByOrder());
+    }
+
+    @GetMapping("/lang")
+    public ResponseEntity<List<LangResponseDTO>> getByLang(@RequestParam String language) {
+        return ResponseEntity.ok(service.getAllbyLang(language));
     }
 }
