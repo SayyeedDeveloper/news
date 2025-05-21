@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.CategoryDTO;
 import sayyeed.com.news.Entities.CategoryEntity;
+import sayyeed.com.news.Entities.RegionEntity;
 import sayyeed.com.news.Exceptions.AppBadException;
 import sayyeed.com.news.Exceptions.NotFoundException;
 import sayyeed.com.news.Repositories.CategoryRepository;
