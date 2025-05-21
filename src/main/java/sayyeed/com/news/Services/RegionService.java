@@ -3,6 +3,7 @@ package sayyeed.com.news.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.RegionDTO;
+import sayyeed.com.news.DTOs.RegionLangResponseDTO;
 import sayyeed.com.news.Entities.RegionEntity;
 import sayyeed.com.news.Exceptions.AppBadException;
 import sayyeed.com.news.Exceptions.NotFoundException;
@@ -76,6 +77,13 @@ public class RegionService {
         return dtos;
     }
 
+    public List<RegionLangResponseDTO> getAllbyLang(String lang){
+        Iterable<RegionEntity> iterable = repository.findAllByOrder_numberSorted();
+        List<RegionLangResponseDTO> dtos = new LinkedList<>();
+        iterable.forEach(entity -> dtos.add(toLangResponseDto(lang, entity)));
+        return dtos;
+    }
+
     private RegionDTO toDto(RegionEntity entity){
         RegionDTO dto = new RegionDTO();
         dto.setId(entity.getId());
@@ -88,4 +96,21 @@ public class RegionService {
         return dto;
     }
 
+    private RegionLangResponseDTO toLangResponseDto(String lang, RegionEntity entity){
+        RegionLangResponseDTO dto = new RegionLangResponseDTO();
+        dto.setId(entity.getId());
+        dto.setKey(entity.getRegionKey());
+        switch (lang){
+            case "uz":
+                dto.setName(entity.getNameUz());
+                break;
+            case"ru":
+                dto.setName(entity.getNameRu());
+                break;
+            case "en":
+                dto.setName(entity.getNameEn());
+                break;
+        }
+        return dto;
+    }
 }

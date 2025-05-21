@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.DTOs.RegionDTO;
+import sayyeed.com.news.DTOs.RegionLangResponseDTO;
 import sayyeed.com.news.Services.RegionService;
 
 import java.util.List;
@@ -35,5 +36,10 @@ public class RegionController {
     @GetMapping("")
     public ResponseEntity<List<RegionDTO>> get() {
         return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping("/lang")
+    public ResponseEntity<List<RegionLangResponseDTO>> getByLang(@RequestParam String language) {
+        return ResponseEntity.ok(service.getAllbyLang(language));
     }
 }
