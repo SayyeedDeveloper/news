@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.CategoryDTO;
 import sayyeed.com.news.Entities.CategoryEntity;
+import sayyeed.com.news.Entities.RegionEntity;
 import sayyeed.com.news.Exceptions.AppBadException;
 import sayyeed.com.news.Exceptions.NotFoundException;
 import sayyeed.com.news.Repositories.CategoryRepository;
@@ -53,5 +54,16 @@ public class CategoryService {
         newDto.setCreatedDate(entity.getCreated_date());
         repository.save(entity);
         return newDto;
+    }
+
+    public Boolean delete(Integer id){
+        Optional<CategoryEntity> optional = repository.findById(id);
+        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
+            throw new NotFoundException("Category not found");
+        }
+        CategoryEntity entity = optional.get();
+        entity.setVisible(Boolean.FALSE);
+        repository.save(entity);
+        return Boolean.TRUE;
     }
 }
