@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface CategoryRepository extends CrudRepository<CategoryEntity, Integer> {
 
-    @Query("from CategoryEntity where visible = true order by order_number")
+    @Query("from CategoryEntity where visible = true order by orderNumber")
     List<CategoryEntity> getAllByOrderSorted();
 
 
@@ -21,4 +21,6 @@ public interface CategoryRepository extends CrudRepository<CategoryEntity, Integ
     int updateVisibleById(Integer id);
 
     Optional<CategoryEntity> findByIdAndVisibleIsTrue(Integer id);
+
+    Optional<CategoryEntity> findByOrderNumber(Integer number);
 }

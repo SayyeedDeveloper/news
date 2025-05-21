@@ -24,24 +24,21 @@ public class CategoryService {
     private EntityManagerFactory entityManagerFactory;
 
     public CategoryDTO create(CategoryDTO dto) {
-        try {
-            CategoryEntity entity = new CategoryEntity();
-            entity.setOrder_number(dto.getOrderNumber());
-            entity.setNameUz(dto.getNameUz());
-            entity.setNameRu(dto.getNameRu());
-            entity.setNameEn(dto.getNameEn());
-            entity.setCategoryKey(dto.getCategoryKey());
-            entity.setCreated_date(LocalDateTime.now());
-            repository.save(entity);
-            dto.setId(entity.getId());
-            dto.setCreatedDate(entity.getCreated_date());
-            return dto;
-        } catch (Exception e) {
-            if (e.getMessage().contains("unique constraint") || e.getMessage().contains("Duplicate entry")) {
-                throw new AppBadException("Category with order number " + dto.getOrderNumber() + " already exists");
-            }
-            throw e;
+        Optional<CategoryEntity> optional = repository.findByOrderNumber(dto.getOrderNumber());
+        if (optional.isPresent()) {
+            throw new AppBadException("OrderNumber " + dto.getOrderNumber() + " already exist");
         }
+        CategoryEntity entity = new CategoryEntity();
+        entity.setOrderNumber(dto.getOrderNumber());
+        entity.setNameUz(dto.getNameUz());
+        entity.setNameRu(dto.getNameRu());
+        entity.setNameEn(dto.getNameEn());
+        entity.setCategoryKey(dto.getCategoryKey());
+        entity.setCreated_date(LocalDateTime.now());
+        repository.save(entity);
+        dto.setId(entity.getId());
+        dto.setCreatedDate(entity.getCreated_date());
+        return dto;
     }
 
     public CategoryDTO update(Integer id, CategoryDTO newDto) {
@@ -50,7 +47,7 @@ public class CategoryService {
             throw new NotFoundException("Category not found");
         }
         CategoryEntity entity = optional.get();
-        entity.setOrder_number(newDto.getOrderNumber());
+        entity.setOrderNumber(newDto.getOrderNumber());
         entity.setNameUz(newDto.getNameUz());
         entity.setNameRu(newDto.getNameRu());
         entity.setNameEn(newDto.getNameEn());
@@ -85,7 +82,7 @@ public class CategoryService {
     private CategoryDTO toDto(CategoryEntity entity) {
         CategoryDTO dto = new CategoryDTO();
         dto.setId(entity.getId());
-        dto.setOrderNumber(entity.getOrder_number());
+        dto.setOrderNumber(entity.getOrderNumber());
         dto.setNameUz(entity.getNameUz());
         dto.setNameRu(entity.getNameRu());
         dto.setNameEn(entity.getNameEn());

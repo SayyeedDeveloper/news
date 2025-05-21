@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import sayyeed.com.news.Entities.CategoryEntity;
 import sayyeed.com.news.Entities.SectionEntity;
 
 import java.util.List;
@@ -21,4 +20,6 @@ public interface SectionRepository extends CrudRepository<SectionEntity, Integer
     int updateVisibleById(Integer id);
 
     Optional<SectionEntity> findByIdAndVisibleIsTrue(Integer id);
+
+    Optional<SectionEntity> findByOrderNumber(Integer orderNumber);
 }

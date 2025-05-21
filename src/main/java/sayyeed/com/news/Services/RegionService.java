@@ -21,24 +21,21 @@ public class RegionService {
     private RegionRepository repository;
 
     public RegionDTO create(RegionDTO dto){
-        try {
-            RegionEntity entity = new RegionEntity();
-            entity.setOrder_number(dto.getOrderNumber());
-            entity.setNameUz(dto.getNameUz());
-            entity.setNameRu(dto.getNameRu());
-            entity.setNameEn(dto.getNameEn());
-            entity.setRegionKey(dto.getRegionKey());
-            entity.setCreated_date(LocalDateTime.now());
-            repository.save(entity);
-            dto.setId(entity.getId());
-            dto.setCreatedDate(entity.getCreated_date());
-            return dto;
-        }catch (Exception e){
-            if(e.getMessage().contains("unique constraint") || e.getMessage().contains("Duplicate entry")){
-                throw new AppBadException("Region with order number " + dto.getOrderNumber() + " already exists");
-            }
-            throw e;
+        Optional<RegionEntity> byOrderNumber = repository.findByOrderNumber(dto.getOrderNumber());
+        if (byOrderNumber.isPresent()) {
+            throw new AppBadException("OrderNumber " + dto.getOrderNumber() + " already exist");
         }
+        RegionEntity entity = new RegionEntity();
+        entity.setOrderNumber(dto.getOrderNumber());
+        entity.setNameUz(dto.getNameUz());
+        entity.setNameRu(dto.getNameRu());
+        entity.setNameEn(dto.getNameEn());
+        entity.setRegionKey(dto.getRegionKey());
+        entity.setCreated_date(LocalDateTime.now());
+        repository.save(entity);
+        dto.setId(entity.getId());
+        dto.setCreatedDate(entity.getCreated_date());
+        return dto;
     }
 
     public RegionDTO update(Integer id, RegionDTO newDto){
@@ -47,7 +44,7 @@ public class RegionService {
             throw new NotFoundException("Region not found");
         }
         RegionEntity entity = optional.get();
-        entity.setOrder_number(newDto.getOrderNumber());
+        entity.setOrderNumber(newDto.getOrderNumber());
         entity.setNameUz(newDto.getNameUz());
         entity.setNameRu(newDto.getNameRu());
         entity.setNameEn(newDto.getNameEn());
@@ -66,14 +63,14 @@ public class RegionService {
     }
 
     public List<RegionDTO> getAll(){
-        Iterable<RegionEntity> iterable = repository.findAllByOrder_numberSorted();
+        Iterable<RegionEntity> iterable = repository.findAllByOrderNumberSorted();
         List<RegionDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toDto(entity)));
         return dtos;
     }
 
     public List<LangResponseDTO> getAllbyLang(String lang){
-        Iterable<RegionEntity> iterable = repository.findAllByOrder_numberSorted();
+        Iterable<RegionEntity> iterable = repository.findAllByOrderNumberSorted();
         List<LangResponseDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toLangResponseDto(lang, entity)));
         return dtos;
@@ -82,7 +79,7 @@ public class RegionService {
     private RegionDTO toDto(RegionEntity entity){
         RegionDTO dto = new RegionDTO();
         dto.setId(entity.getId());
-        dto.setOrderNumber(entity.getOrder_number());
+        dto.setOrderNumber(entity.getOrderNumber());
         dto.setNameUz(entity.getNameUz());
         dto.setNameRu(entity.getNameRu());
         dto.setNameEn(entity.getNameEn());

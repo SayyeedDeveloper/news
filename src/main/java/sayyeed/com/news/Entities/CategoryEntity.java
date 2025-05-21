@@ -16,7 +16,7 @@ public class CategoryEntity {
     private Integer id;
 
     @Column(unique = true)
-    private Integer order_number;
+    private Integer orderNumber;
 
     @Column
     private String nameUz;

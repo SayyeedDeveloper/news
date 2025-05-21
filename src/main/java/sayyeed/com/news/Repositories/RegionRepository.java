@@ -18,6 +18,8 @@ public interface RegionRepository extends CrudRepository<RegionEntity, Integer> 
     @Query("update RegionEntity set visible = false where id = ?1")
     int updateVisibleById(Integer id);
 
-    @Query("from RegionEntity where visible = true order by order_number")
-    List<RegionEntity> findAllByOrder_numberSorted();
+    @Query("from RegionEntity where visible = true order by orderNumber")
+    List<RegionEntity> findAllByOrderNumberSorted();
+
+    Optional<RegionEntity> findByOrderNumber(Integer number);
 }
