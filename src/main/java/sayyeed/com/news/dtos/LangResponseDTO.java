@@ -1,4 +1,4 @@
-package sayyeed.com.news.DTOs;
+package sayyeed.com.news.dtos;
 
 import lombok.Getter;
 import lombok.Setter;

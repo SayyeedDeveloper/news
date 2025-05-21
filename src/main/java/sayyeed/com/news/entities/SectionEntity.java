@@ -1,4 +1,4 @@
-package sayyeed.com.news.Entities;
+package sayyeed.com.news.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class SectionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
+    @Column
     private Integer orderNumber;
 
     @Column
@@ -28,8 +28,8 @@ public class SectionEntity {
     @Column
     private String nameEn;
 
-    @Column
-    private Integer SectionKey;
+    @Column(unique = true)
+    private String SectionKey;
 
     @Column
     private Boolean visible = true;

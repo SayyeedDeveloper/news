@@ -1,4 +1,4 @@
-package sayyeed.com.news.DTOs;
+package sayyeed.com.news.dtos;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

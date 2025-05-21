@@ -1,4 +1,4 @@
-package sayyeed.com.news.Exceptions;
+package sayyeed.com.news.exceptions;
 
 public class AppBadException extends RuntimeException {
     public AppBadException(String message) {

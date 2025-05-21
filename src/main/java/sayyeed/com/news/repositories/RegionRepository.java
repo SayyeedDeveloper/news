@@ -1,10 +1,10 @@
-package sayyeed.com.news.Repositories;
+package sayyeed.com.news.repositories;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import sayyeed.com.news.Entities.RegionEntity;
+import sayyeed.com.news.entities.RegionEntity;
 
 import java.util.List;
 import java.util.Optional;

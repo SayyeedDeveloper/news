@@ -1,13 +1,13 @@
-package sayyeed.com.news.Services;
+package sayyeed.com.news.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sayyeed.com.news.DTOs.RegionDTO;
-import sayyeed.com.news.DTOs.LangResponseDTO;
-import sayyeed.com.news.Entities.RegionEntity;
-import sayyeed.com.news.Exceptions.AppBadException;
-import sayyeed.com.news.Exceptions.NotFoundException;
-import sayyeed.com.news.Repositories.RegionRepository;
+import sayyeed.com.news.dtos.LangResponseDTO;
+import sayyeed.com.news.dtos.SectionDTO;
+import sayyeed.com.news.entities.SectionEntity;
+import sayyeed.com.news.exceptions.AppBadException;
+import sayyeed.com.news.exceptions.NotFoundException;
+import sayyeed.com.news.repositories.SectionRepository;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -15,83 +15,86 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RegionService {
+public class SectionService {
 
     @Autowired
-    private RegionRepository repository;
+    private SectionRepository repository;
 
-    public RegionDTO create(RegionDTO dto){
-        Optional<RegionEntity> byOrderNumber = repository.findByOrderNumber(dto.getOrderNumber());
-        if (byOrderNumber.isPresent()) {
+    public SectionDTO create(SectionDTO dto){
+        Optional<SectionEntity> optional = repository.findByOrderNumber(dto.getOrderNumber());
+        if (optional.isPresent()) {
             throw new AppBadException("OrderNumber " + dto.getOrderNumber() + " already exist");
         }
-        RegionEntity entity = new RegionEntity();
+        SectionEntity entity = new SectionEntity();
         entity.setOrderNumber(dto.getOrderNumber());
         entity.setNameUz(dto.getNameUz());
         entity.setNameRu(dto.getNameRu());
         entity.setNameEn(dto.getNameEn());
-        entity.setRegionKey(dto.getRegionKey());
-        entity.setCreated_date(LocalDateTime.now());
+        entity.setSectionKey(dto.getSectionKey());
+        entity.setCreatedDate(LocalDateTime.now());
+        entity.setImageId(dto.getImageId());
         repository.save(entity);
         dto.setId(entity.getId());
-        dto.setCreatedDate(entity.getCreated_date());
+        dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }
 
-    public RegionDTO update(Integer id, RegionDTO newDto){
-        Optional<RegionEntity> optional = repository.findById(id);
+    public SectionDTO update(Integer id, SectionDTO newDto){
+        Optional<SectionEntity> optional = repository.findById(id);
         if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
-            throw new NotFoundException("Region not found");
+            throw new NotFoundException("Category not found");
         }
-        RegionEntity entity = optional.get();
+        SectionEntity entity = optional.get();
         entity.setOrderNumber(newDto.getOrderNumber());
         entity.setNameUz(newDto.getNameUz());
         entity.setNameRu(newDto.getNameRu());
         entity.setNameEn(newDto.getNameEn());
-        entity.setRegionKey(newDto.getRegionKey());
+        entity.setSectionKey(newDto.getSectionKey());
         newDto.setId(entity.getId());
-        newDto.setCreatedDate(entity.getCreated_date());
+        newDto.setCreatedDate(entity.getCreatedDate());
+        newDto.setImageId(entity.getImageId());
         repository.save(entity);
         return newDto;
     }
 
-    public Boolean delete(Integer id){
+    public Boolean delete(Integer id) {
         var entity = repository.findByIdAndVisibleIsTrue(id)
                 .orElseThrow(() -> new NotFoundException("Category not found"));
         int i = repository.updateVisibleById(entity.getId());
         return i == 1;
     }
 
-    public List<RegionDTO> getAll(){
-        Iterable<RegionEntity> iterable = repository.findAllByOrderNumberSorted();
-        List<RegionDTO> dtos = new LinkedList<>();
+    public List<SectionDTO> getAllByOrder() {
+        Iterable<SectionEntity> iterable = repository.getAllByOrderSorted();
+        List<SectionDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toDto(entity)));
         return dtos;
     }
 
     public List<LangResponseDTO> getAllbyLang(String lang){
-        Iterable<RegionEntity> iterable = repository.findAllByOrderNumberSorted();
+        Iterable<SectionEntity> iterable = repository.getAllByOrderSorted();
         List<LangResponseDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toLangResponseDto(lang, entity)));
         return dtos;
     }
 
-    private RegionDTO toDto(RegionEntity entity){
-        RegionDTO dto = new RegionDTO();
+    private SectionDTO toDto(SectionEntity entity) {
+        SectionDTO dto = new SectionDTO();
         dto.setId(entity.getId());
         dto.setOrderNumber(entity.getOrderNumber());
         dto.setNameUz(entity.getNameUz());
         dto.setNameRu(entity.getNameRu());
         dto.setNameEn(entity.getNameEn());
-        dto.setRegionKey(entity.getRegionKey());
-        dto.setCreatedDate(entity.getCreated_date());
+        dto.setSectionKey(entity.getSectionKey());
+        dto.setCreatedDate(entity.getCreatedDate());
+        dto.setImageId(entity.getImageId());
         return dto;
     }
 
-    private LangResponseDTO toLangResponseDto(String lang, RegionEntity entity){
+    private LangResponseDTO toLangResponseDto(String lang, SectionEntity entity){
         LangResponseDTO dto = new LangResponseDTO();
         dto.setId(entity.getId());
-        dto.setKey(entity.getRegionKey());
+        dto.setKey(entity.getSectionKey());
         switch (lang){
             case "uz":
                 dto.setName(entity.getNameUz());
@@ -105,4 +108,5 @@ public class RegionService {
         }
         return dto;
     }
+
 }

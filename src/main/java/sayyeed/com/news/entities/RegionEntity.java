@@ -1,4 +1,4 @@
-package sayyeed.com.news.Entities;
+package sayyeed.com.news.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class RegionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
+    @Column
     private Integer orderNumber;
 
     @Column
@@ -28,13 +28,13 @@ public class RegionEntity {
     @Column
     private String nameEn;
 
-    @Column
-    private Integer regionKey;
+    @Column(unique = true)
+    private String regionKey;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column
     private Boolean visible = true;
 
     @Column
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
 
 }

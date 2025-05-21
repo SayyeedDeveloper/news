@@ -1,14 +1,14 @@
-package sayyeed.com.news.Services;
+package sayyeed.com.news.services;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sayyeed.com.news.DTOs.CategoryDTO;
-import sayyeed.com.news.DTOs.LangResponseDTO;
-import sayyeed.com.news.Entities.CategoryEntity;
-import sayyeed.com.news.Exceptions.AppBadException;
-import sayyeed.com.news.Exceptions.NotFoundException;
-import sayyeed.com.news.Repositories.CategoryRepository;
+import sayyeed.com.news.dtos.CategoryDTO;
+import sayyeed.com.news.dtos.LangResponseDTO;
+import sayyeed.com.news.entities.CategoryEntity;
+import sayyeed.com.news.exceptions.AppBadException;
+import sayyeed.com.news.exceptions.NotFoundException;
+import sayyeed.com.news.repositories.CategoryRepository;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -34,10 +34,10 @@ public class CategoryService {
         entity.setNameRu(dto.getNameRu());
         entity.setNameEn(dto.getNameEn());
         entity.setCategoryKey(dto.getCategoryKey());
-        entity.setCreated_date(LocalDateTime.now());
+        entity.setCreatedDate(LocalDateTime.now());
         repository.save(entity);
         dto.setId(entity.getId());
-        dto.setCreatedDate(entity.getCreated_date());
+        dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }
 
@@ -53,7 +53,7 @@ public class CategoryService {
         entity.setNameEn(newDto.getNameEn());
         entity.setCategoryKey(newDto.getCategoryKey());
         newDto.setId(entity.getId());
-        newDto.setCreatedDate(entity.getCreated_date());
+        newDto.setCreatedDate(entity.getCreatedDate());
         repository.save(entity);
         return newDto;
     }
@@ -87,7 +87,7 @@ public class CategoryService {
         dto.setNameRu(entity.getNameRu());
         dto.setNameEn(entity.getNameEn());
         dto.setCategoryKey(entity.getCategoryKey());
-        dto.setCreatedDate(entity.getCreated_date());
+        dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }
 

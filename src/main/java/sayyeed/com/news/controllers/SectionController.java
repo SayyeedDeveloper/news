@@ -1,31 +1,29 @@
-package sayyeed.com.news.Controllers;
-
+package sayyeed.com.news.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sayyeed.com.news.DTOs.RegionDTO;
-import sayyeed.com.news.DTOs.LangResponseDTO;
-import sayyeed.com.news.Services.RegionService;
+import sayyeed.com.news.dtos.LangResponseDTO;
+import sayyeed.com.news.dtos.SectionDTO;
+import sayyeed.com.news.services.SectionService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/region")
-public class RegionController {
-
+@RequestMapping("/api/section")
+public class SectionController {
     @Autowired
-    private RegionService service;
+    private SectionService service;
 
     @PostMapping("")
-    public ResponseEntity<RegionDTO> create(@Valid @RequestBody RegionDTO dto){
+    public ResponseEntity<SectionDTO> create(@Valid @RequestBody SectionDTO dto){
         return ResponseEntity.ok(service.create(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RegionDTO> update(@PathVariable("id") Integer id, @RequestBody RegionDTO newDto){
-        return ResponseEntity.ok(service.update(id, newDto));
+    public ResponseEntity<SectionDTO> update(@PathVariable Integer id,@RequestBody SectionDTO dto){
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -34,8 +32,8 @@ public class RegionController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<RegionDTO>> get() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<SectionDTO>> getAllByOrder(){
+        return ResponseEntity.ok(service.getAllByOrder());
     }
 
     @GetMapping("/lang")

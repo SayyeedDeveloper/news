@@ -1,4 +1,4 @@
-package sayyeed.com.news.Controllers;
+package sayyeed.com.news.controllers;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import sayyeed.com.news.Exceptions.AppBadException;
-import sayyeed.com.news.Exceptions.NotFoundException;
+import sayyeed.com.news.exceptions.AppBadException;
+import sayyeed.com.news.exceptions.NotFoundException;
 
 import java.util.*;
 
