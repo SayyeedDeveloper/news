@@ -59,15 +59,10 @@ public class RegionService {
     }
 
     public Boolean delete(Integer id){
-        Optional<RegionEntity> optional = repository.findById(id);
-        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
-            throw new NotFoundException("Region not found");
-        }
-        RegionEntity entity = optional.get();
-        entity.setVisible(Boolean.FALSE);
-        repository.save(entity);
-        return Boolean.TRUE;
-
+        var entity = repository.findByIdAndVisibleIsTrue(id)
+                .orElseThrow(() -> new NotFoundException("Category not found"));
+        int i = repository.updateVisibleById(entity.getId());
+        return i == 1;
     }
 
     public List<RegionDTO> getAll(){

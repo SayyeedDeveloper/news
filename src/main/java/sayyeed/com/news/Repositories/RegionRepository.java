@@ -1,5 +1,7 @@
 package sayyeed.com.news.Repositories;
 
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import sayyeed.com.news.Entities.RegionEntity;
@@ -8,7 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RegionRepository extends CrudRepository<RegionEntity, Integer> {
-    List<RegionEntity> findAllByVisibleIsTrue();
+
+    Optional<RegionEntity> findByIdAndVisibleIsTrue(Integer id);
+
+    @Transactional
+    @Modifying
+    @Query("update RegionEntity set visible = false where id = ?1")
+    int updateVisibleById(Integer id);
 
     @Query("from RegionEntity where visible = true order by order_number")
     List<RegionEntity> findAllByOrder_numberSorted();

@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.CategoryDTO;
 import sayyeed.com.news.DTOs.LangResponseDTO;
-import sayyeed.com.news.DTOs.RegionDTO;
 import sayyeed.com.news.Entities.CategoryEntity;
-import sayyeed.com.news.Entities.RegionEntity;
 import sayyeed.com.news.Exceptions.AppBadException;
 import sayyeed.com.news.Exceptions.NotFoundException;
 import sayyeed.com.news.Repositories.CategoryRepository;
@@ -25,7 +23,7 @@ public class CategoryService {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    public CategoryDTO create(CategoryDTO dto){
+    public CategoryDTO create(CategoryDTO dto) {
         try {
             CategoryEntity entity = new CategoryEntity();
             entity.setOrder_number(dto.getOrderNumber());
@@ -38,17 +36,17 @@ public class CategoryService {
             dto.setId(entity.getId());
             dto.setCreatedDate(entity.getCreated_date());
             return dto;
-        }catch (Exception e){
-            if(e.getMessage().contains("unique constraint") || e.getMessage().contains("Duplicate entry")){
+        } catch (Exception e) {
+            if (e.getMessage().contains("unique constraint") || e.getMessage().contains("Duplicate entry")) {
                 throw new AppBadException("Category with order number " + dto.getOrderNumber() + " already exists");
             }
             throw e;
         }
     }
 
-    public CategoryDTO update(Integer id, CategoryDTO newDto){
+    public CategoryDTO update(Integer id, CategoryDTO newDto) {
         Optional<CategoryEntity> optional = repository.findById(id);
-        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
+        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE) {
             throw new NotFoundException("Category not found");
         }
         CategoryEntity entity = optional.get();
@@ -63,32 +61,28 @@ public class CategoryService {
         return newDto;
     }
 
-    public Boolean delete(Integer id){
-        Optional<CategoryEntity> optional = repository.findById(id);
-        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
-            throw new NotFoundException("Category not found");
-        }
-        CategoryEntity entity = optional.get();
-        entity.setVisible(Boolean.FALSE);
-        repository.save(entity);
-        return Boolean.TRUE;
+    public Boolean delete(Integer id) {
+        var entity = repository.findByIdAndVisibleIsTrue(id)
+                .orElseThrow(() -> new NotFoundException("Category not found"));
+        int i = repository.updateVisibleById(entity.getId());
+        return i == 1;
     }
 
-    public List<CategoryDTO> getAllByOrder(){
+    public List<CategoryDTO> getAllByOrder() {
         Iterable<CategoryEntity> iterable = repository.getAllByOrderSorted();
         List<CategoryDTO> dtos = new LinkedList<>();
-        iterable.forEach( entity -> dtos.add(toDto(entity)));
+        iterable.forEach(entity -> dtos.add(toDto(entity)));
         return dtos;
     }
 
-    public List<LangResponseDTO> getAllbyLang(String lang){
+    public List<LangResponseDTO> getAllbyLang(String lang) {
         Iterable<CategoryEntity> iterable = repository.getAllByOrderSorted();
         List<LangResponseDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toLangResponseDto(lang, entity)));
         return dtos;
     }
 
-    private CategoryDTO toDto(CategoryEntity entity){
+    private CategoryDTO toDto(CategoryEntity entity) {
         CategoryDTO dto = new CategoryDTO();
         dto.setId(entity.getId());
         dto.setOrderNumber(entity.getOrder_number());
@@ -100,15 +94,15 @@ public class CategoryService {
         return dto;
     }
 
-    private LangResponseDTO toLangResponseDto(String lang, CategoryEntity entity){
+    private LangResponseDTO toLangResponseDto(String lang, CategoryEntity entity) {
         LangResponseDTO dto = new LangResponseDTO();
         dto.setId(entity.getId());
         dto.setKey(entity.getCategoryKey());
-        switch (lang){
+        switch (lang) {
             case "uz":
                 dto.setName(entity.getNameUz());
                 break;
-            case"ru":
+            case "ru":
                 dto.setName(entity.getNameRu());
                 break;
             case "en":
