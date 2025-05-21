@@ -27,7 +27,7 @@ public class CategoryDTO {
     @NotBlank(message = "nameEn required")
     private String nameEn;
 
-    @NotNull(message = "regionKey required")
+    @NotNull(message = "categoryKey required")
     private Integer categoryKey;
 
     private LocalDateTime createdDate;
