@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegionLangResponseDTO {
+public class LangResponseDTO {
     private Integer id;
     private Integer key;
     private String name;

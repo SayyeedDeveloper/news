@@ -3,7 +3,7 @@ package sayyeed.com.news.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.RegionDTO;
-import sayyeed.com.news.DTOs.RegionLangResponseDTO;
+import sayyeed.com.news.DTOs.LangResponseDTO;
 import sayyeed.com.news.Entities.RegionEntity;
 import sayyeed.com.news.Exceptions.AppBadException;
 import sayyeed.com.news.Exceptions.NotFoundException;
@@ -77,9 +77,9 @@ public class RegionService {
         return dtos;
     }
 
-    public List<RegionLangResponseDTO> getAllbyLang(String lang){
+    public List<LangResponseDTO> getAllbyLang(String lang){
         Iterable<RegionEntity> iterable = repository.findAllByOrder_numberSorted();
-        List<RegionLangResponseDTO> dtos = new LinkedList<>();
+        List<LangResponseDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toLangResponseDto(lang, entity)));
         return dtos;
     }
@@ -96,8 +96,8 @@ public class RegionService {
         return dto;
     }
 
-    private RegionLangResponseDTO toLangResponseDto(String lang, RegionEntity entity){
-        RegionLangResponseDTO dto = new RegionLangResponseDTO();
+    private LangResponseDTO toLangResponseDto(String lang, RegionEntity entity){
+        LangResponseDTO dto = new LangResponseDTO();
         dto.setId(entity.getId());
         dto.setKey(entity.getRegionKey());
         switch (lang){
