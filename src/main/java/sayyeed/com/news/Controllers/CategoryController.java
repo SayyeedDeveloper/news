@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.DTOs.CategoryDTO;
-import sayyeed.com.news.DTOs.RegionDTO;
 import sayyeed.com.news.Services.CategoryService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/category")
@@ -28,5 +29,10 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id){
         return ResponseEntity.ok(service.delete(id));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<CategoryDTO>> getAllByOrder(){
+        return ResponseEntity.ok(service.getAllByOrder());
     }
 }

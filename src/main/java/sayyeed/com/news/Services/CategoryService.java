@@ -1,8 +1,10 @@
 package sayyeed.com.news.Services;
 
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.CategoryDTO;
+import sayyeed.com.news.DTOs.RegionDTO;
 import sayyeed.com.news.Entities.CategoryEntity;
 import sayyeed.com.news.Entities.RegionEntity;
 import sayyeed.com.news.Exceptions.AppBadException;
@@ -10,6 +12,8 @@ import sayyeed.com.news.Exceptions.NotFoundException;
 import sayyeed.com.news.Repositories.CategoryRepository;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +21,8 @@ public class CategoryService {
 
     @Autowired
     private CategoryRepository repository;
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
 
     public CategoryDTO create(CategoryDTO dto){
         try {
@@ -65,5 +71,24 @@ public class CategoryService {
         entity.setVisible(Boolean.FALSE);
         repository.save(entity);
         return Boolean.TRUE;
+    }
+
+    public List<CategoryDTO> getAllByOrder(){
+        Iterable<CategoryEntity> iterable = repository.getAllByOrderSorted();
+        List<CategoryDTO> dtos = new LinkedList<>();
+        iterable.forEach( entity -> dtos.add(toDto(entity)));
+        return dtos;
+    }
+
+    private CategoryDTO toDto(CategoryEntity entity){
+        CategoryDTO dto = new CategoryDTO();
+        dto.setId(entity.getId());
+        dto.setOrderNumber(entity.getOrder_number());
+        dto.setNameUz(entity.getNameUz());
+        dto.setNameRu(entity.getNameRu());
+        dto.setNameEn(entity.getNameEn());
+        dto.setCategoryKey(entity.getCategoryKey());
+        dto.setCreatedDate(entity.getCreated_date());
+        return dto;
     }
 }
