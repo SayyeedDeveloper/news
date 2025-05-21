@@ -54,4 +54,15 @@ public class CategoryService {
         repository.save(entity);
         return newDto;
     }
+
+    public Boolean delete(Integer id){
+        Optional<CategoryEntity> optional = repository.findById(id);
+        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
+            throw new NotFoundException("Category not found");
+        }
+        CategoryEntity entity = optional.get();
+        entity.setVisible(Boolean.FALSE);
+        repository.save(entity);
+        return Boolean.TRUE;
+    }
 }
