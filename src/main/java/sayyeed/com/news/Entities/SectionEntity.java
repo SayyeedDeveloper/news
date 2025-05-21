@@ -1,14 +1,13 @@
 package sayyeed.com.news.Entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "SectionTable")
+@Table(name = "Section")
 @Getter
 @Setter
 public class SectionEntity {
