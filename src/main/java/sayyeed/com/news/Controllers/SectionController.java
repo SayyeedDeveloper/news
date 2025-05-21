@@ -22,4 +22,9 @@ public class SectionController {
     public ResponseEntity<SectionDTO> update(@PathVariable Integer id,@RequestBody SectionDTO dto){
         return ResponseEntity.ok(service.update(id, dto));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id){
+        return ResponseEntity.ok(service.delete(id));
+    }
 }

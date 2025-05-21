@@ -3,7 +3,6 @@ package sayyeed.com.news.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.SectionDTO;
-import sayyeed.com.news.Entities.CategoryEntity;
 import sayyeed.com.news.Entities.SectionEntity;
 import sayyeed.com.news.Exceptions.AppBadException;
 import sayyeed.com.news.Exceptions.NotFoundException;
@@ -56,5 +55,12 @@ public class SectionService {
         newDto.setImageId(entity.getImageId());
         repository.save(entity);
         return newDto;
+    }
+
+    public Boolean delete(Integer id) {
+        var entity = repository.findByIdAndVisibleIsTrue(id)
+                .orElseThrow(() -> new NotFoundException("Category not found"));
+        int i = repository.updateVisibleById(entity.getId());
+        return i == 1;
     }
 }
