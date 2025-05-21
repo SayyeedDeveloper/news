@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface SectionRepository extends CrudRepository<SectionEntity, Integer> {
     @Query("from SectionEntity where visible = true order by orderNumber")
-    List<CategoryEntity> getAllByOrderSorted();
+    List<SectionEntity> getAllByOrderSorted();
 
 
     @Transactional

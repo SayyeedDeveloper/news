@@ -2,13 +2,17 @@ package sayyeed.com.news.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sayyeed.com.news.DTOs.CategoryDTO;
 import sayyeed.com.news.DTOs.SectionDTO;
+import sayyeed.com.news.Entities.CategoryEntity;
 import sayyeed.com.news.Entities.SectionEntity;
 import sayyeed.com.news.Exceptions.AppBadException;
 import sayyeed.com.news.Exceptions.NotFoundException;
 import sayyeed.com.news.Repositories.SectionRepository;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -63,4 +67,24 @@ public class SectionService {
         int i = repository.updateVisibleById(entity.getId());
         return i == 1;
     }
+
+    public List<SectionDTO> getAllByOrder() {
+        Iterable<SectionEntity> iterable = repository.getAllByOrderSorted();
+        List<SectionDTO> dtos = new LinkedList<>();
+        iterable.forEach(entity -> dtos.add(toDto(entity)));
+        return dtos;
+    }
+    private SectionDTO toDto(SectionEntity entity) {
+        SectionDTO dto = new SectionDTO();
+        dto.setId(entity.getId());
+        dto.setOrderNumber(entity.getOrderNumber());
+        dto.setNameUz(entity.getNameUz());
+        dto.setNameRu(entity.getNameRu());
+        dto.setNameEn(entity.getNameEn());
+        dto.setSectionKey(entity.getSectionKey());
+        dto.setCreatedDate(entity.getCreatedDate());
+        dto.setImageId(entity.getImageId());
+        return dto;
+    }
+
 }

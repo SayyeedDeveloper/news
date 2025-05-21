@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.DTOs.SectionDTO;
 import sayyeed.com.news.Services.SectionService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/section")
 public class SectionController {
@@ -26,5 +28,10 @@ public class SectionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id){
         return ResponseEntity.ok(service.delete(id));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<SectionDTO>> getAllByOrder(){
+        return ResponseEntity.ok(service.getAllByOrder());
     }
 }
