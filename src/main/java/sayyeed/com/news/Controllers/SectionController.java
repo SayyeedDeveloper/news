@@ -3,10 +3,7 @@ package sayyeed.com.news.Controllers;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.DTOs.SectionDTO;
 import sayyeed.com.news.Services.SectionService;
 
@@ -19,5 +16,10 @@ public class SectionController {
     @PostMapping("")
     public ResponseEntity<SectionDTO> create(@Valid @RequestBody SectionDTO dto){
         return ResponseEntity.ok(service.create(dto));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SectionDTO> update(@PathVariable Integer id,@RequestBody SectionDTO dto){
+        return ResponseEntity.ok(service.update(id, dto));
     }
 }

@@ -3,11 +3,14 @@ package sayyeed.com.news.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.DTOs.SectionDTO;
+import sayyeed.com.news.Entities.CategoryEntity;
 import sayyeed.com.news.Entities.SectionEntity;
 import sayyeed.com.news.Exceptions.AppBadException;
+import sayyeed.com.news.Exceptions.NotFoundException;
 import sayyeed.com.news.Repositories.SectionRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class SectionService {
@@ -35,5 +38,23 @@ public class SectionService {
             }
             throw e;
         }
+    }
+
+    public SectionDTO update(Integer id, SectionDTO newDto){
+        Optional<SectionEntity> optional = repository.findById(id);
+        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
+            throw new NotFoundException("Category not found");
+        }
+        SectionEntity entity = optional.get();
+        entity.setOrderNumber(newDto.getOrderNumber());
+        entity.setNameUz(newDto.getNameUz());
+        entity.setNameRu(newDto.getNameRu());
+        entity.setNameEn(newDto.getNameEn());
+        entity.setSectionKey(newDto.getSectionKey());
+        newDto.setId(entity.getId());
+        newDto.setCreatedDate(entity.getCreatedDate());
+        newDto.setImageId(entity.getImageId());
+        repository.save(entity);
+        return newDto;
     }
 }
