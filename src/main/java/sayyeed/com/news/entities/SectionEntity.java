@@ -28,8 +28,8 @@ public class SectionEntity {
     @Column
     private String nameEn;
 
-    @Column(unique = true)
-    private String SectionKey;
+    @Column()
+    private String sectionKey;
 
     @Column
     private Boolean visible = true;

@@ -1,13 +1,12 @@
 package sayyeed.com.news.services;
 
-import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.dtos.CategoryDTO;
 import sayyeed.com.news.dtos.LangResponseDTO;
 import sayyeed.com.news.entities.CategoryEntity;
+import sayyeed.com.news.enums.AppLanguageEnum;
 import sayyeed.com.news.exceptions.AppBadException;
-import sayyeed.com.news.exceptions.NotFoundException;
 import sayyeed.com.news.repositories.CategoryRepository;
 
 import java.time.LocalDateTime;
@@ -20,13 +19,11 @@ public class CategoryService {
 
     @Autowired
     private CategoryRepository repository;
-    @Autowired
-    private EntityManagerFactory entityManagerFactory;
 
     public CategoryDTO create(CategoryDTO dto) {
-        Optional<CategoryEntity> optional = repository.findByOrderNumber(dto.getOrderNumber());
+        Optional<CategoryEntity> optional = repository.findByCategoryKeyAndVisibleIsTrue(dto.getCategoryKey());
         if (optional.isPresent()) {
-            throw new AppBadException("OrderNumber " + dto.getOrderNumber() + " already exist");
+            throw new AppBadException("CategoryKey " + dto.getCategoryKey() + " already exist");
         }
         CategoryEntity entity = new CategoryEntity();
         entity.setOrderNumber(dto.getOrderNumber());
@@ -36,15 +33,21 @@ public class CategoryService {
         entity.setCategoryKey(dto.getCategoryKey());
         entity.setCreatedDate(LocalDateTime.now());
         repository.save(entity);
+        //response
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }
 
     public CategoryDTO update(Integer id, CategoryDTO newDto) {
-        Optional<CategoryEntity> optional = repository.findById(id);
-        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE) {
-            throw new NotFoundException("Category not found");
+        Optional<CategoryEntity> optional = repository.findByIdAndVisibleIsTrue(id);
+        if (optional.isEmpty()) {
+            throw new AppBadException("Category not found");
+        }
+
+        Optional<CategoryEntity> keyOptional = repository.findByCategoryKeyAndVisibleIsTrue(newDto.getCategoryKey());
+        if (keyOptional.isPresent() && !id.equals(keyOptional.get().getId())) {
+            throw new AppBadException("Category key present");
         }
         CategoryEntity entity = optional.get();
         entity.setOrderNumber(newDto.getOrderNumber());
@@ -52,17 +55,14 @@ public class CategoryService {
         entity.setNameRu(newDto.getNameRu());
         entity.setNameEn(newDto.getNameEn());
         entity.setCategoryKey(newDto.getCategoryKey());
-        newDto.setId(entity.getId());
-        newDto.setCreatedDate(entity.getCreatedDate());
         repository.save(entity);
+
+        newDto.setId(entity.getId());
         return newDto;
     }
 
     public Boolean delete(Integer id) {
-        var entity = repository.findByIdAndVisibleIsTrue(id)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
-        int i = repository.updateVisibleById(entity.getId());
-        return i == 1;
+        return repository.updateVisibleById(id) == 1;
     }
 
     public List<CategoryDTO> getAllByOrder() {
@@ -72,7 +72,7 @@ public class CategoryService {
         return dtos;
     }
 
-    public List<LangResponseDTO> getAllbyLang(String lang) {
+    public List<LangResponseDTO> getAllByLang(AppLanguageEnum lang) {
         Iterable<CategoryEntity> iterable = repository.getAllByOrderSorted();
         List<LangResponseDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toLangResponseDto(lang, entity)));
@@ -91,18 +91,18 @@ public class CategoryService {
         return dto;
     }
 
-    private LangResponseDTO toLangResponseDto(String lang, CategoryEntity entity) {
+    private LangResponseDTO toLangResponseDto(AppLanguageEnum lang, CategoryEntity entity) {
         LangResponseDTO dto = new LangResponseDTO();
         dto.setId(entity.getId());
         dto.setKey(entity.getCategoryKey());
         switch (lang) {
-            case "uz":
+            case UZ:
                 dto.setName(entity.getNameUz());
                 break;
-            case "ru":
+            case RU:
                 dto.setName(entity.getNameRu());
                 break;
-            case "en":
+            case EN:
                 dto.setName(entity.getNameEn());
                 break;
         }

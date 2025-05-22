@@ -21,5 +21,5 @@ public interface SectionRepository extends CrudRepository<SectionEntity, Integer
 
     Optional<SectionEntity> findByIdAndVisibleIsTrue(Integer id);
 
-    Optional<SectionEntity> findByOrderNumber(Integer orderNumber);
+    Optional<SectionEntity> findBySectionKeyAndVisibleIsTrue(String key);
 }

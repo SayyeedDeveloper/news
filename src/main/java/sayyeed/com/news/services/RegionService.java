@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import sayyeed.com.news.dtos.RegionDTO;
 import sayyeed.com.news.dtos.LangResponseDTO;
 import sayyeed.com.news.entities.RegionEntity;
+import sayyeed.com.news.enums.AppLanguageEnum;
 import sayyeed.com.news.exceptions.AppBadException;
 import sayyeed.com.news.exceptions.NotFoundException;
 import sayyeed.com.news.repositories.RegionRepository;
@@ -21,9 +22,9 @@ public class RegionService {
     private RegionRepository repository;
 
     public RegionDTO create(RegionDTO dto){
-        Optional<RegionEntity> byOrderNumber = repository.findByOrderNumber(dto.getOrderNumber());
+        Optional<RegionEntity> byOrderNumber = repository.findByRegionKeyAndVisibleIsTrue(dto.getRegionKey());
         if (byOrderNumber.isPresent()) {
-            throw new AppBadException("OrderNumber " + dto.getOrderNumber() + " already exist");
+            throw new AppBadException("Region key " + dto.getRegionKey() + " already exist");
         }
         RegionEntity entity = new RegionEntity();
         entity.setOrderNumber(dto.getOrderNumber());
@@ -32,6 +33,7 @@ public class RegionService {
         entity.setNameEn(dto.getNameEn());
         entity.setRegionKey(dto.getRegionKey());
         entity.setCreatedDate(LocalDateTime.now());
+        //response
         repository.save(entity);
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreatedDate());
@@ -39,9 +41,13 @@ public class RegionService {
     }
 
     public RegionDTO update(Integer id, RegionDTO newDto){
-        Optional<RegionEntity> optional = repository.findById(id);
-        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
-            throw new NotFoundException("Region not found");
+        Optional<RegionEntity> optional = repository.findByIdAndVisibleIsTrue(id);
+        if (optional.isEmpty()){
+            throw new AppBadException("Region not found");
+        }
+        Optional<RegionEntity> keyOptional = repository.findByRegionKeyAndVisibleIsTrue(newDto.getRegionKey());
+        if (keyOptional.isPresent() && !id.equals(keyOptional.get().getId())){
+            throw new AppBadException("Region key present");
         }
         RegionEntity entity = optional.get();
         entity.setOrderNumber(newDto.getOrderNumber());
@@ -49,17 +55,14 @@ public class RegionService {
         entity.setNameRu(newDto.getNameRu());
         entity.setNameEn(newDto.getNameEn());
         entity.setRegionKey(newDto.getRegionKey());
-        newDto.setId(entity.getId());
-        newDto.setCreatedDate(entity.getCreatedDate());
         repository.save(entity);
+        //response
+        newDto.setId(entity.getId());
         return newDto;
     }
 
     public Boolean delete(Integer id){
-        var entity = repository.findByIdAndVisibleIsTrue(id)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
-        int i = repository.updateVisibleById(entity.getId());
-        return i == 1;
+        return repository.updateVisibleById(id) == 1;
     }
 
     public List<RegionDTO> getAll(){
@@ -69,7 +72,7 @@ public class RegionService {
         return dtos;
     }
 
-    public List<LangResponseDTO> getAllbyLang(String lang){
+    public List<LangResponseDTO> getAllByLang(AppLanguageEnum lang){
         Iterable<RegionEntity> iterable = repository.findAllByOrderNumberSorted();
         List<LangResponseDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toLangResponseDto(lang, entity)));
@@ -88,18 +91,18 @@ public class RegionService {
         return dto;
     }
 
-    private LangResponseDTO toLangResponseDto(String lang, RegionEntity entity){
+    private LangResponseDTO toLangResponseDto(AppLanguageEnum lang, RegionEntity entity){
         LangResponseDTO dto = new LangResponseDTO();
         dto.setId(entity.getId());
         dto.setKey(entity.getRegionKey());
         switch (lang){
-            case "uz":
+            case UZ:
                 dto.setName(entity.getNameUz());
                 break;
-            case"ru":
+            case RU:
                 dto.setName(entity.getNameRu());
                 break;
-            case "en":
+            case EN:
                 dto.setName(entity.getNameEn());
                 break;
         }

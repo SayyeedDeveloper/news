@@ -27,7 +27,7 @@ public class RegionDTO {
     private String nameEn;
 
     @NotNull(message = "regionKey required")
-    private Integer regionKey;
+    private String regionKey;
 
     private LocalDateTime createdDate;
 }

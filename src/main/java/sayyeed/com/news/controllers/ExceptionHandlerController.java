@@ -17,16 +17,10 @@ import java.util.*;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
-    @ExceptionHandler({AppBadException.class})
-    public ResponseEntity<String> handeBadRequest(AppBadException e){
+    @ExceptionHandler({AppBadException.class, NotFoundException.class})
+    public ResponseEntity<String> handeBadRequest(RuntimeException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<String> handleNotFound(NotFoundException e){
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

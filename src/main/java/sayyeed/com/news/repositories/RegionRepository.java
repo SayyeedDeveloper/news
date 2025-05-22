@@ -21,5 +21,6 @@ public interface RegionRepository extends CrudRepository<RegionEntity, Integer> 
     @Query("from RegionEntity where visible = true order by orderNumber")
     List<RegionEntity> findAllByOrderNumberSorted();
 
-    Optional<RegionEntity> findByOrderNumber(Integer number);
+    Optional<RegionEntity> findByRegionKeyAndVisibleIsTrue(String key);
+
 }

@@ -28,7 +28,7 @@ public class RegionEntity {
     @Column
     private String nameEn;
 
-    @Column(unique = true)
+    @Column()
     private String regionKey;
 
     @Column

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.dtos.RegionDTO;
 import sayyeed.com.news.dtos.LangResponseDTO;
+import sayyeed.com.news.enums.AppLanguageEnum;
 import sayyeed.com.news.services.RegionService;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class RegionController {
     }
 
     @GetMapping("/lang")
-    public ResponseEntity<List<LangResponseDTO>> getByLang(@RequestParam String language) {
-        return ResponseEntity.ok(service.getAllbyLang(language));
+    public ResponseEntity<List<LangResponseDTO>> getByLang(@RequestParam AppLanguageEnum language) {
+        return ResponseEntity.ok(service.getAllByLang(language));
     }
 }

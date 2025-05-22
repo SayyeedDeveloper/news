@@ -22,5 +22,5 @@ public interface CategoryRepository extends CrudRepository<CategoryEntity, Integ
 
     Optional<CategoryEntity> findByIdAndVisibleIsTrue(Integer id);
 
-    Optional<CategoryEntity> findByOrderNumber(Integer number);
+    Optional<CategoryEntity> findByCategoryKeyAndVisibleIsTrue(String categoryKey);
 }

@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import sayyeed.com.news.dtos.LangResponseDTO;
 import sayyeed.com.news.dtos.SectionDTO;
 import sayyeed.com.news.entities.SectionEntity;
+import sayyeed.com.news.enums.AppLanguageEnum;
 import sayyeed.com.news.exceptions.AppBadException;
-import sayyeed.com.news.exceptions.NotFoundException;
 import sayyeed.com.news.repositories.SectionRepository;
 
 import java.time.LocalDateTime;
@@ -21,9 +21,9 @@ public class SectionService {
     private SectionRepository repository;
 
     public SectionDTO create(SectionDTO dto){
-        Optional<SectionEntity> optional = repository.findByOrderNumber(dto.getOrderNumber());
+        Optional<SectionEntity> optional = repository.findBySectionKeyAndVisibleIsTrue(dto.getSectionKey());
         if (optional.isPresent()) {
-            throw new AppBadException("OrderNumber " + dto.getOrderNumber() + " already exist");
+            throw new AppBadException("Section key " + dto.getSectionKey() + " already exist");
         }
         SectionEntity entity = new SectionEntity();
         entity.setOrderNumber(dto.getOrderNumber());
@@ -40,28 +40,31 @@ public class SectionService {
     }
 
     public SectionDTO update(Integer id, SectionDTO newDto){
-        Optional<SectionEntity> optional = repository.findById(id);
-        if (optional.isEmpty() || optional.get().getVisible() == Boolean.FALSE){
-            throw new NotFoundException("Category not found");
+        Optional<SectionEntity> optional = repository.findByIdAndVisibleIsTrue(id);
+        if (optional.isEmpty()){
+            throw new AppBadException("Section not found");
         }
+
+        Optional<SectionEntity> keyOptional = repository.findBySectionKeyAndVisibleIsTrue(newDto.getSectionKey());
+        if (keyOptional.isPresent() && !keyOptional.get().getId().equals(id)){
+            throw new AppBadException("Section key present");
+        }
+
         SectionEntity entity = optional.get();
         entity.setOrderNumber(newDto.getOrderNumber());
         entity.setNameUz(newDto.getNameUz());
         entity.setNameRu(newDto.getNameRu());
         entity.setNameEn(newDto.getNameEn());
         entity.setSectionKey(newDto.getSectionKey());
-        newDto.setId(entity.getId());
-        newDto.setCreatedDate(entity.getCreatedDate());
-        newDto.setImageId(entity.getImageId());
+        entity.setImageId(newDto.getImageId());
         repository.save(entity);
+        //response
+        newDto.setId(entity.getId());
         return newDto;
     }
 
     public Boolean delete(Integer id) {
-        var entity = repository.findByIdAndVisibleIsTrue(id)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
-        int i = repository.updateVisibleById(entity.getId());
-        return i == 1;
+        return repository.updateVisibleById(id) == 1;
     }
 
     public List<SectionDTO> getAllByOrder() {
@@ -71,7 +74,7 @@ public class SectionService {
         return dtos;
     }
 
-    public List<LangResponseDTO> getAllbyLang(String lang){
+    public List<LangResponseDTO> getAllByLang(AppLanguageEnum lang){
         Iterable<SectionEntity> iterable = repository.getAllByOrderSorted();
         List<LangResponseDTO> dtos = new LinkedList<>();
         iterable.forEach(entity -> dtos.add(toLangResponseDto(lang, entity)));
@@ -91,18 +94,18 @@ public class SectionService {
         return dto;
     }
 
-    private LangResponseDTO toLangResponseDto(String lang, SectionEntity entity){
+    private LangResponseDTO toLangResponseDto(AppLanguageEnum lang, SectionEntity entity){
         LangResponseDTO dto = new LangResponseDTO();
         dto.setId(entity.getId());
         dto.setKey(entity.getSectionKey());
         switch (lang){
-            case "uz":
+            case UZ:
                 dto.setName(entity.getNameUz());
                 break;
-            case"ru":
+            case RU:
                 dto.setName(entity.getNameRu());
                 break;
-            case "en":
+            case EN:
                 dto.setName(entity.getNameEn());
                 break;
         }

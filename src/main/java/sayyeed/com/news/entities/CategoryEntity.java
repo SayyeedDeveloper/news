@@ -27,7 +27,7 @@ public class CategoryEntity {
     @Column
     private String nameEn;
 
-    @Column(unique = true)
+    @Column()
     private String categoryKey;
 
     @Column

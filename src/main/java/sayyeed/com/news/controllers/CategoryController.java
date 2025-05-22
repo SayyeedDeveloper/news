@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.dtos.CategoryDTO;
 import sayyeed.com.news.dtos.LangResponseDTO;
+import sayyeed.com.news.enums.AppLanguageEnum;
 import sayyeed.com.news.services.CategoryService;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class CategoryController {
     }
 
     @GetMapping("/lang")
-    public ResponseEntity<List<LangResponseDTO>> getByLang(@RequestParam String language) {
-        return ResponseEntity.ok(service.getAllbyLang(language));
+    public ResponseEntity<List<LangResponseDTO>> getByLang(@RequestParam AppLanguageEnum language) {
+        return ResponseEntity.ok(service.getAllByLang(language));
     }
 }

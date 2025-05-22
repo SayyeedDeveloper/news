@@ -26,7 +26,7 @@ public class SectionDTO {
     private String nameEn;
 
     @NotNull(message = "sectionKey required")
-    private Integer SectionKey;
+    private String SectionKey;
 
     private LocalDateTime createdDate;
 

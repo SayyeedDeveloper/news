@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class LangResponseDTO {
     private Integer id;
-    private Integer key;
+    private String key;
     private String name;
 }
