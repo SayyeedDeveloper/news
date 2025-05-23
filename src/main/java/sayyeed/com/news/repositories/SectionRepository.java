@@ -19,7 +19,7 @@ public interface SectionRepository extends CrudRepository<SectionEntity, Integer
     @Query("update SectionEntity set visible = false where id = ?1")
     int updateVisibleById(Integer id);
 
-    Optional<SectionEntity> findByIdAndVisibleIsTrue(Integer id);
+    Optional<SectionEntity> findByIdAndVisibleIsTrue(Integer id); //TODO Need to write a query fo getting Object my language
 
     Optional<SectionEntity> findBySectionKeyAndVisibleIsTrue(String key);
 }
