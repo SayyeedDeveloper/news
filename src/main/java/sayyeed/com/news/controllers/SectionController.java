@@ -40,7 +40,7 @@ public class SectionController {
     }
 
     @GetMapping("/lang")
-    public ResponseEntity<List<LangResponseDTO>> getByLang(@RequestParam AppLanguageEnum language) {
+    public ResponseEntity<List<LangResponseDTO>> getByLang(@RequestHeader(name = "Accept-Language", defaultValue = "UZ") AppLanguageEnum language) {
         return ResponseEntity.ok(service.getAllByLang(language));
     }
 }

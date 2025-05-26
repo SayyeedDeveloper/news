@@ -2,18 +2,14 @@ package sayyeed.com.news.dtos.profile;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import sayyeed.com.news.enums.ProfileStatusEnum;
 import sayyeed.com.news.enums.UserRoleEnum;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
-public class ProfileDTO {
-    private Integer id;
+@Data
+public class UpdateProfileDto {
 
     @NotBlank(message = "Name required")
     private String name;
@@ -24,14 +20,7 @@ public class ProfileDTO {
     @NotBlank(message = "Username required")
     private String username;
 
-    @NotBlank(message = "Password required")
-    private String password;
-
     private ProfileStatusEnum status;
-
-    private Boolean visible;
-
-    private LocalDateTime createdDate;
 
     private String photoId;
 

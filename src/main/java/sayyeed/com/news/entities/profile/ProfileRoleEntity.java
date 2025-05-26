@@ -14,13 +14,15 @@ public class ProfileRoleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "profile_id", updatable = false, insertable = false)
+    @Column(name = "profile_id")
     private Integer profileId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "profile_id", updatable = false, insertable = false)
     private ProfileEntity profileEntity;
 
+    @Enumerated(EnumType.STRING)
     @Column
     private UserRoleEnum role;
+
 }
