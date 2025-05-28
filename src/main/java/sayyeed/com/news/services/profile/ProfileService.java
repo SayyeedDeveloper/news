@@ -107,6 +107,10 @@ public class ProfileService {
         return new  PageImpl<>(dtos, PageRequest.of(page, size), result.getTotalCount());
     }
 
+    public Boolean delete(Integer id){
+        return repository.updateVisibleFalse(id) == 1;
+    }
+
 
     public ProfileInfoDTO toProfileInfoDto(ProfileEntity entity){
         ProfileInfoDTO profileInfoDTO = new ProfileInfoDTO();

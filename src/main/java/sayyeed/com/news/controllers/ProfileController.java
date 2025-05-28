@@ -42,4 +42,12 @@ public class ProfileController {
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
         return ResponseEntity.ok(service.filter(filterDTO, page - 1, size));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id){
+        return ResponseEntity.ok(service.delete(id));
+    }
+
+
+    //TODO Delete profile by Id
 }
