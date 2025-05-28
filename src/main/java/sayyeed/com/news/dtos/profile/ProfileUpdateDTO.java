@@ -4,12 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import sayyeed.com.news.enums.ProfileStatusEnum;
-import sayyeed.com.news.enums.UserRoleEnum;
+import sayyeed.com.news.enums.ProfileRoleEnum;
 
 import java.util.List;
 
 @Data
-public class UpdateProfileDto {
+public class ProfileUpdateDTO {
 
     @NotBlank(message = "Name required")
     private String name;
@@ -25,5 +25,5 @@ public class UpdateProfileDto {
     private String photoId;
 
     @NotEmpty(message = "Profile at least have one role")
-    private List<UserRoleEnum> roles;
+    private List<ProfileRoleEnum> roles;
 }

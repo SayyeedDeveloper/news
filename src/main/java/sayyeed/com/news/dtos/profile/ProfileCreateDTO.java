@@ -1,20 +1,18 @@
 package sayyeed.com.news.dtos.profile;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import sayyeed.com.news.enums.ProfileStatusEnum;
-import sayyeed.com.news.enums.UserRoleEnum;
+import sayyeed.com.news.enums.ProfileRoleEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CreateProfileDTO {
+public class ProfileCreateDTO {
     private Integer id;
 
     @NotBlank(message = "Name required")
@@ -36,5 +34,5 @@ public class CreateProfileDTO {
     private String photoId;
 
     @NotEmpty(message = "Profile at least have one role")
-    private List<UserRoleEnum> roles;
+    private List<ProfileRoleEnum> roles;
 }

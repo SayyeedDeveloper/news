@@ -3,7 +3,7 @@ package sayyeed.com.news.entities.profile;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import sayyeed.com.news.enums.UserRoleEnum;
+import sayyeed.com.news.enums.ProfileRoleEnum;
 
 @Getter
 @Setter
@@ -19,10 +19,10 @@ public class ProfileRoleEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", updatable = false, insertable = false)
-    private ProfileEntity profileEntity;
+    private ProfileEntity profile;
 
     @Enumerated(EnumType.STRING)
     @Column
-    private UserRoleEnum role;
+    private ProfileRoleEnum role;
 
 }

@@ -3,14 +3,16 @@ package sayyeed.com.news.entities.profile;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import sayyeed.com.news.enums.ProfileRoleEnum;
 import sayyeed.com.news.enums.ProfileStatusEnum;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class ProfileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +43,6 @@ public class ProfileEntity {
     @Column
     private String photoId;
 
-
+    @OneToMany(mappedBy = "profile")
+    private List<ProfileRoleEntity> roleList;
 }

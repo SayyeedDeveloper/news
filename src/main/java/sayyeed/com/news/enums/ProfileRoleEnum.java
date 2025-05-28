@@ -1,6 +1,6 @@
 package sayyeed.com.news.enums;
 
-public enum UserRoleEnum {
+public enum ProfileRoleEnum {
     ROLE_USER,
     ROLE_ADMIN,
     ROLE_MODERATOR,
