@@ -16,6 +16,7 @@ public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer
 
     Optional<ProfileEntity> findByIdAndVisibleIsTrue(Integer id);
 
+    @Query("from ProfileEntity where visible = true order by createdDate desc")
     Page<ProfileEntity> findAllByOrderByCreatedDateDesc(Pageable pageable);
 
     @Transactional
