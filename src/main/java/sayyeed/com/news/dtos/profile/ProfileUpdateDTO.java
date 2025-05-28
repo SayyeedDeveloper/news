@@ -2,13 +2,15 @@ package sayyeed.com.news.dtos.profile;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import sayyeed.com.news.enums.profile.ProfileStatusEnum;
 import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class ProfileUpdateDTO {
 
     @NotBlank(message = "Name required")
