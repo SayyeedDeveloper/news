@@ -3,8 +3,8 @@ package sayyeed.com.news.dtos.profile;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-import sayyeed.com.news.enums.ProfileStatusEnum;
-import sayyeed.com.news.enums.ProfileRoleEnum;
+import sayyeed.com.news.enums.profile.ProfileStatusEnum;
+import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 
 import java.util.List;
 

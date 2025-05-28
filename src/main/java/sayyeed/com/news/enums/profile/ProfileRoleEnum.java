@@ -1,4 +1,4 @@
-package sayyeed.com.news.enums;
+package sayyeed.com.news.enums.profile;
 
 public enum ProfileRoleEnum {
     ROLE_USER,

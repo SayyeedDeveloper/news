@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import sayyeed.com.news.entities.profile.ProfileRoleEntity;
-import sayyeed.com.news.enums.ProfileRoleEnum;
+import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 
 import java.util.List;
 

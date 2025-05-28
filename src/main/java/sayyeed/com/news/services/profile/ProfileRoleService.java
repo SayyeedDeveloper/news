@@ -3,7 +3,7 @@ package sayyeed.com.news.services.profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.entities.profile.ProfileRoleEntity;
-import sayyeed.com.news.enums.ProfileRoleEnum;
+import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 import sayyeed.com.news.repositories.profile.ProfileRoleRepository;
 
 import java.util.List;

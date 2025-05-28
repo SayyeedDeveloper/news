@@ -3,8 +3,8 @@ package sayyeed.com.news.dtos.profile;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
-import sayyeed.com.news.enums.ProfileStatusEnum;
-import sayyeed.com.news.enums.ProfileRoleEnum;
+import sayyeed.com.news.enums.profile.ProfileStatusEnum;
+import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;

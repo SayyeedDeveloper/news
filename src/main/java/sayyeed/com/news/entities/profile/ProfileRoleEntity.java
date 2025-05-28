@@ -3,7 +3,7 @@ package sayyeed.com.news.entities.profile;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import sayyeed.com.news.enums.ProfileRoleEnum;
+import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 
 @Getter
 @Setter

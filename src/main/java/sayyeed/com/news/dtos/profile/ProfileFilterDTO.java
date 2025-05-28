@@ -1,8 +1,8 @@
 package sayyeed.com.news.dtos.profile;
 
 import lombok.Data;
-import sayyeed.com.news.enums.ProfileRoleEnum;
-import sayyeed.com.news.enums.ProfileStatusEnum;
+import sayyeed.com.news.enums.profile.ProfileRoleEnum;
+import sayyeed.com.news.enums.profile.ProfileStatusEnum;
 
 import java.time.LocalDate;
 
