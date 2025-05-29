@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.dtos.article.ArticleCreateDTO;
 import sayyeed.com.news.dtos.article.ArticleInfoDTO;
+import sayyeed.com.news.dtos.article.ArticleUpdateDTO;
 import sayyeed.com.news.entities.article.ArticleEntity;
 import sayyeed.com.news.enums.article.ArticleStatusEnum;
+import sayyeed.com.news.exceptions.AppBadException;
 import sayyeed.com.news.repositories.article.ArticleRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class ArticleService {
@@ -47,6 +50,30 @@ public class ArticleService {
 
         return toArticleInfoDTO(entity);
     }
+
+    public ArticleInfoDTO update(Integer id, ArticleUpdateDTO updateDTO){
+        Optional<ArticleEntity> optional = repository.findById(id);
+        if (optional.isEmpty()) {
+            throw new AppBadException("Article not found");
+        }
+        ArticleEntity entity = optional.get();
+        entity.setTitle(updateDTO.getTitle());
+        entity.setDescription(updateDTO.getDescription());
+        entity.setContent(updateDTO.getContent());
+        entity.setImageId(updateDTO.getImageId());
+        entity.setRegionId(updateDTO.getRegionId());
+
+        repository.save(entity);
+
+        // set categories
+        articleCategoryService.merge(id, updateDTO.getCategories());
+
+        // set sections
+        articleSectionService.merge(id, updateDTO.getSections());
+
+        return toArticleInfoDTO(entity);
+    }
+
 
     public ArticleInfoDTO toArticleInfoDTO(ArticleEntity entity){
         ArticleInfoDTO dto = new ArticleInfoDTO();
