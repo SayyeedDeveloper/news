@@ -18,4 +18,10 @@ public interface ProfileRoleRepository extends CrudRepository<ProfileRoleEntity,
     @Modifying
     @Query("delete from  ProfileRoleEntity where profileId =?1 and role =?2")
     void deleteByIdAndRoleEnum(Integer profileId, ProfileRoleEnum roleEnum);
+
+    @Transactional
+    @Modifying
+    @Query("Delete from ProfileRoleEntity where profileId =?1")
+    void deleteByProfileId(Integer profileId);
+
 }

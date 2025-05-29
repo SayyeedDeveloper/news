@@ -14,20 +14,27 @@ public class ProfileRoleService {
     @Autowired
     private ProfileRoleRepository roleRepository;
 
-    public void merge(Integer profileId, List<ProfileRoleEnum> newList){
-        List<ProfileRoleEnum> oldList =  roleRepository.getRoleListByProfileId(profileId);
+    public void merge(Integer profileId, List<ProfileRoleEnum> newList) {
+        List<ProfileRoleEnum> oldList = roleRepository.getRoleListByProfileId(profileId);
         newList.stream().filter(n -> !oldList.contains(n)).forEach(pe -> create(profileId, pe));
         oldList.stream().filter(old -> !newList.contains(old)).forEach(pe -> roleRepository.deleteByIdAndRoleEnum(profileId, pe));
     }
 
-    public void create(Integer profileId, ProfileRoleEnum role){
+    public void create(Integer profileId, ProfileRoleEnum role) {
         ProfileRoleEntity entity = new ProfileRoleEntity();
         entity.setProfileId(profileId);
         entity.setRole(role);
         roleRepository.save(entity);
     }
 
-    public List<ProfileRoleEnum> getRolesById(Integer profileId){
+    public List<ProfileRoleEnum> getRolesById(Integer profileId) {
         return roleRepository.getRoleListByProfileId(profileId);
     }
+
+
+    public void deleteRolesByProfileId(Integer profileId) {
+        roleRepository.deleteByProfileId(profileId);
+    }
+
+
 }
