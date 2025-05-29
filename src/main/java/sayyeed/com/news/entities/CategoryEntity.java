@@ -35,9 +35,6 @@ public class CategoryEntity {
     @Column
     private Boolean visible = true;
 
-    @ManyToMany(mappedBy = "categorySet")
-    private Set<ArticleEntity> articleSet;
-
     @Column
     private LocalDateTime createdDate;
 

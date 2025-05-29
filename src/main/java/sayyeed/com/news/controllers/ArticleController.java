@@ -1,5 +1,6 @@
 package sayyeed.com.news.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class ArticleController {
     private ArticleService service;
 
     @PostMapping("")
-    public ResponseEntity<ArticleInfoDTO> create(@RequestBody ArticleCreateDTO createDTO){
+    public ResponseEntity<ArticleInfoDTO> create(@Valid @RequestBody ArticleCreateDTO createDTO){
         return ResponseEntity.ok(service.create(createDTO));
     }
 }

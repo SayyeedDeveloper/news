@@ -79,6 +79,10 @@ public class CategoryService {
         return dtos;
     }
 
+    public List<Integer> getAllCategoryIds(){
+        return repository.getAllIds();
+    };
+
     private CategoryDTO toDto(CategoryEntity entity) {
         CategoryDTO dto = new CategoryDTO();
         dto.setId(entity.getId());

@@ -3,13 +3,12 @@ package sayyeed.com.news.entities.article;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import sayyeed.com.news.entities.CategoryEntity;
 import sayyeed.com.news.entities.RegionEntity;
-import sayyeed.com.news.entities.SectionEntity;
 import sayyeed.com.news.enums.article.ArticleStatusEnum;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "article")
@@ -48,6 +47,7 @@ public class ArticleEntity {
     @Column
     private Integer publisherId;
 
+    @Enumerated(EnumType.STRING)
     @Column
     private ArticleStatusEnum status;
 
@@ -66,15 +66,9 @@ public class ArticleEntity {
     @Column
     private Integer viewCount;
 
-    @ManyToMany
-    @JoinTable(name = "article_category",
-            joinColumns = @JoinColumn(name = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<CategoryEntity> categorySet;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ArticleCategoryEntity> articleCategories = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "article_section",
-            joinColumns = @JoinColumn(name = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "section_id"))
-    private Set<SectionEntity> sectionSet;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ArticleSectionEntity> articleSections = new ArrayList<>();
 }

@@ -1,5 +1,6 @@
 package sayyeed.com.news.repositories;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,7 @@ public interface SectionRepository extends CrudRepository<SectionEntity, Integer
     Optional<SectionEntity> findByIdAndVisibleIsTrue(Integer id); //TODO Need to write a query fo getting Object my language
 
     Optional<SectionEntity> findBySectionKeyAndVisibleIsTrue(String key);
+
+    @Query("select id from SectionEntity")
+    List<Integer> getAllSectionIds();
 }

@@ -39,8 +39,6 @@ public class SectionEntity {
     @Column
     private Boolean visible = true;
 
-    @ManyToMany(mappedBy = "sectionSet")
-    private Set<ArticleEntity> articleSet;
 
     @Column
     private LocalDateTime createdDate;

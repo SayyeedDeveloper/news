@@ -81,6 +81,10 @@ public class SectionService {
         return dtos;
     }
 
+    public List<Integer> getAllSectionIds() {
+        return repository.getAllSectionIds();
+    }
+
     private SectionDTO toDto(SectionEntity entity) {
         SectionDTO dto = new SectionDTO();
         dto.setId(entity.getId());
