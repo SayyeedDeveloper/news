@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sayyeed.com.news.dtos.auth.RegistrationDTO;
-import sayyeed.com.news.services.AuthService;
+import sayyeed.com.news.services.auth.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")

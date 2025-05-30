@@ -1,4 +1,4 @@
-package sayyeed.com.news.services;
+package sayyeed.com.news.services.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +9,7 @@ import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 import sayyeed.com.news.enums.profile.ProfileStatusEnum;
 import sayyeed.com.news.exceptions.AppBadException;
 import sayyeed.com.news.repositories.profile.ProfileRepository;
+import sayyeed.com.news.services.EmailSenderService;
 import sayyeed.com.news.services.profile.ProfileRoleService;
 
 import java.util.Optional;
@@ -48,16 +49,14 @@ public class AuthService {
         profile.setVisible(true);
         profile.setStatus(ProfileStatusEnum.NOT_ACTIVE);
         profileRepository.save(profile);
+
         // create profile roles
         profileRoleService.create(profile.getId(), ProfileRoleEnum.ROLE_USER);
 
-        emailSenderService.sendSimpleMessage("Registration complete",
-                "Sms code 12345",
-                dto.getUsername());
+        // send verificationCode
+        emailSenderService.sendVerificationCode(profile.getUsername());
 
-        // send()
-        // response
-        return "Tastiqlash kodi ketdi mazgi qara.";
+        return "Verification Code sent!";
     }
 
 }
