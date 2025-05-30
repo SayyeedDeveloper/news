@@ -16,8 +16,12 @@ public interface ArticleSectionRepository extends CrudRepository<ArticleSectionE
     @Transactional
     @Modifying
     @Query("delete from ArticleSectionEntity where articleId =?1 and sectionId =?2")
-
     void deleteByArticleIdAndSectionId(Integer articleId, Integer sectionId);
+
+    @Transactional
+    @Modifying
+    @Query("delete from ArticleSectionEntity where articleId =?1")
+    void deleteArticleSectionByArticleId(Integer articleId);
 
 }
 

@@ -18,5 +18,9 @@ public interface ArticleCategoryRepository extends CrudRepository<ArticleCategor
     @Query("delete from ArticleCategoryEntity where articleId =?1 and categoryId =?2")
     void deleteByArticleIdAndCategoryId(Integer articleId, Integer categoryId);
 
+    @Transactional
+    @Modifying
+    @Query("delete from ArticleCategoryEntity where articleId = ?1")
+    void deleteArticleCategoryByArticleId(Integer articleId);
 
 }

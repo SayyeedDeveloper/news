@@ -74,6 +74,22 @@ public class ArticleService {
         return toArticleInfoDTO(entity);
     }
 
+    public String deleteArticle(Integer id){
+
+        Optional<ArticleEntity> optional = repository.findById(id);
+        if (optional.isEmpty()){
+            throw new AppBadException("Article not found");
+        }
+
+        // delete Article from ArticleCategory table
+        articleCategoryService.deleteArticleCategoryByArticleId(id);
+
+        // delete Article from ArticleSection table
+        articleSectionService.deleteArticleSectionByArticleId(id);
+
+        repository.delete(optional.get());
+        return "Article deleted successfully";
+    }
 
     public ArticleInfoDTO toArticleInfoDTO(ArticleEntity entity){
         ArticleInfoDTO dto = new ArticleInfoDTO();

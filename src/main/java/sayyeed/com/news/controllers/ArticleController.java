@@ -17,13 +17,17 @@ public class ArticleController {
     private ArticleService service;
 
     @PostMapping("")
-    public ResponseEntity<ArticleInfoDTO> create(@Valid @RequestBody ArticleCreateDTO createDTO){
+    public ResponseEntity<ArticleInfoDTO> create(@Valid @RequestBody ArticleCreateDTO createDTO) {
         return ResponseEntity.ok(service.create(createDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ArticleInfoDTO> update(@Valid @RequestBody ArticleUpdateDTO updateDTO, @PathVariable Integer id){
+    public ResponseEntity<ArticleInfoDTO> update(@Valid @RequestBody ArticleUpdateDTO updateDTO, @PathVariable Integer id) {
         return ResponseEntity.ok(service.update(id, updateDTO));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.deleteArticle(id));
+    }
 }

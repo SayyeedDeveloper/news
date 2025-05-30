@@ -44,4 +44,8 @@ public class ArticleCategoryService {
         return repository.getCategoryIdsByArticleId(articleId);
     }
 
+    public void deleteArticleCategoryByArticleId(Integer articleId) {
+        repository.deleteArticleCategoryByArticleId(articleId);
+    }
+
 }
