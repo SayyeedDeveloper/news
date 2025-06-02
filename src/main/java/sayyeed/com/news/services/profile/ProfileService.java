@@ -110,6 +110,10 @@ public class ProfileService {
         return repository.updateVisibleFalse(id) == 1;
     }
 
+    public void setStatusByUsername(ProfileStatusEnum status, String username){
+        repository.setStatusByUsername(status, username);
+    }
+
 
     public ProfileInfoDTO toProfileInfoDto(ProfileEntity entity){
         ProfileInfoDTO profileInfoDTO = new ProfileInfoDTO();

@@ -1,12 +1,10 @@
 package sayyeed.com.news.controllers;
 
 import jakarta.validation.Valid;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.dtos.auth.RegistrationDTO;
 import sayyeed.com.news.services.auth.AuthService;
 
@@ -22,4 +20,8 @@ public class AuthController {
         return ResponseEntity.ok(authService.registration(dto));
     }
 
+    @GetMapping("/registration/email/verification/{username}/{code}")
+    public ResponseEntity<String> verificationByLink(@PathVariable("username") String username, @PathVariable("code") String code) {
+        return ResponseEntity.ok(authService.verificationByLink(username, code));
+    }
 }

@@ -9,7 +9,8 @@ import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 import sayyeed.com.news.enums.profile.ProfileStatusEnum;
 import sayyeed.com.news.exceptions.AppBadException;
 import sayyeed.com.news.repositories.profile.ProfileRepository;
-import sayyeed.com.news.services.EmailSenderService;
+import sayyeed.com.news.services.email.EmailHistoryService;
+import sayyeed.com.news.services.email.EmailSenderService;
 import sayyeed.com.news.services.profile.ProfileRoleService;
 
 import java.util.Optional;
@@ -19,13 +20,18 @@ public class AuthService {
 
     @Autowired
     private ProfileRepository profileRepository;
+
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
     private ProfileRoleService profileRoleService;
 
     @Autowired
     private EmailSenderService emailSenderService;
+
+    @Autowired
+    private EmailHistoryService emailHistoryService;
 
     public String registration(RegistrationDTO dto) {
         // 1. validation TODO in DTO class
@@ -54,9 +60,17 @@ public class AuthService {
         profileRoleService.create(profile.getId(), ProfileRoleEnum.ROLE_USER);
 
         // send verificationCode
-        emailSenderService.sendVerificationCode(profile.getUsername());
+        emailSenderService.sendVerificationLink(profile.getUsername());
 
         return "Verification Code sent!";
+    }
+
+    public String verificationByLink(String username, String code) {
+        Boolean flag = emailHistoryService.isEmailSend(username, code);
+        if (flag == true) {
+            return "Verification Success!";
+        }
+        return "Something went wrong!";
     }
 
 }
