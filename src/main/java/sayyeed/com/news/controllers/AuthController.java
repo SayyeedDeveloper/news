@@ -22,9 +22,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.registration(dto));
     }
 
-    @GetMapping("/registration/email/verification/{username}/{code}")
-    public ResponseEntity<String> verificationByLink(@PathVariable("username") String username, @PathVariable("code") String code) {
-        return ResponseEntity.ok(authService.verificationByLink(username, code));
+    @GetMapping("/registration/email/verification/{token}")
+    public ResponseEntity<String> verificationByLink(@PathVariable String token) {
+        return ResponseEntity.ok(authService.verificationByLink(token));
     }
 
     @PostMapping("/login")
