@@ -70,8 +70,8 @@ public class AuthService {
         return "Verification Code sent!";
     }
 
-    public String verificationByLink(String username, String code) {
-        Boolean flag = emailHistoryService.isEmailSend(username, code);
+    public String verificationByLink(String token) {
+        Boolean flag = emailHistoryService.isEmailSend(token);
         if (flag == true) {
             return "Verification Success!";
         }

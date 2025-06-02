@@ -6,6 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.utils.CodeGenerator;
+import sayyeed.com.news.utils.JwtUtil;
 
 @Service
 public class EmailSenderService {
@@ -30,9 +31,10 @@ public class EmailSenderService {
 
     public void sendVerificationLink(String toAccount) {
         String code = CodeGenerator.fiveDigit();
+        String encodedToken = JwtUtil.encode(toAccount, code);
         String subject = "Verification Link !";
-        String body = "Click here to Verification: http://localhost:8080/api/auth/registration/email/verification/%s/%s";
-        body = String.format(body, toAccount, code);
+        String body = "Click here to Verification: http://localhost:8080/api/auth/registration/email/verification/%s";
+        body = String.format(body, encodedToken);
 
         //send
         sendSimpleMessage(subject, body, toAccount);

@@ -17,7 +17,7 @@ public class EmailHistoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "body")
+    @Column(name = "body", length = 2048)
     private String body;
 
     @Column(name = "code")

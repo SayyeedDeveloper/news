@@ -2,10 +2,12 @@ package sayyeed.com.news.services.email;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sayyeed.com.news.dtos.JwtDTO;
 import sayyeed.com.news.entities.EmailHistoryEntity;
 import sayyeed.com.news.enums.profile.ProfileStatusEnum;
 import sayyeed.com.news.repositories.EmailHistoryRepository;
 import sayyeed.com.news.services.profile.ProfileService;
+import sayyeed.com.news.utils.JwtUtil;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -32,7 +34,10 @@ public class EmailHistoryService {
         repository.save(entity);
     }
 
-    public Boolean isEmailSend(String username, String code) {
+    public Boolean isEmailSend(String token) {
+        JwtDTO jwtDTO = JwtUtil.decode(token);
+         String username = jwtDTO.getUsername();
+         String code = jwtDTO.getCode();
         Optional<EmailHistoryEntity> optional = repository.findTopByUsernameOrderBySentTimeDesc(username);
         if (optional.isEmpty()) {
             return false;
