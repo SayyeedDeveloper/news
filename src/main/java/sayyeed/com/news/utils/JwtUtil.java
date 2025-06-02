@@ -43,7 +43,7 @@ public class JwtUtil {
             String username = (String) claims.get("username");
             String code = (String) claims.get("code");
             return new JwtDTO(username, code);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new AppBadException("Something went wrong");
         }
     }
