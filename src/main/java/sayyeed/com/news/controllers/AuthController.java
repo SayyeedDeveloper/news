@@ -5,7 +5,9 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sayyeed.com.news.dtos.auth.LoginDTO;
 import sayyeed.com.news.dtos.auth.RegistrationDTO;
+import sayyeed.com.news.dtos.profile.ProfileInfoDTO;
 import sayyeed.com.news.services.auth.AuthService;
 
 @RestController
@@ -24,4 +26,10 @@ public class AuthController {
     public ResponseEntity<String> verificationByLink(@PathVariable("username") String username, @PathVariable("code") String code) {
         return ResponseEntity.ok(authService.verificationByLink(username, code));
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<ProfileInfoDTO> login(@Valid @RequestBody LoginDTO dto) {
+        return ResponseEntity.ok(authService.login(dto));
+    }
+
 }

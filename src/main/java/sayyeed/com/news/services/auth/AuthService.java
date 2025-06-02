@@ -3,7 +3,9 @@ package sayyeed.com.news.services.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import sayyeed.com.news.dtos.auth.LoginDTO;
 import sayyeed.com.news.dtos.auth.RegistrationDTO;
+import sayyeed.com.news.dtos.profile.ProfileInfoDTO;
 import sayyeed.com.news.entities.profile.ProfileEntity;
 import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 import sayyeed.com.news.enums.profile.ProfileStatusEnum;
@@ -12,6 +14,7 @@ import sayyeed.com.news.repositories.profile.ProfileRepository;
 import sayyeed.com.news.services.email.EmailHistoryService;
 import sayyeed.com.news.services.email.EmailSenderService;
 import sayyeed.com.news.services.profile.ProfileRoleService;
+import sayyeed.com.news.services.profile.ProfileService;
 
 import java.util.Optional;
 
@@ -32,6 +35,8 @@ public class AuthService {
 
     @Autowired
     private EmailHistoryService emailHistoryService;
+    @Autowired
+    private ProfileService profileService;
 
     public String registration(RegistrationDTO dto) {
         // 1. validation TODO in DTO class
@@ -71,6 +76,26 @@ public class AuthService {
             return "Verification Success!";
         }
         return "Something went wrong!";
+    }
+
+    public ProfileInfoDTO login(LoginDTO dto) {
+
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(dto.getUsername());
+        if (optional.isEmpty()){
+            throw new AppBadException("username or password wrong");
+        }
+        ProfileEntity entity = optional.get();
+
+        if (entity.getStatus() != ProfileStatusEnum.ACTIVE) {
+            throw new AppBadException("username or password wrong");
+        }
+
+        boolean flag = bCryptPasswordEncoder.matches(dto.getPassword(), entity.getPassword());
+
+        if (flag) {
+            return profileService.toProfileInfoDto(entity);
+        }
+        throw new AppBadException("username or password wrong");
     }
 
 }
