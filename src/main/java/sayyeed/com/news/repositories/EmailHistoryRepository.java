@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public interface EmailHistoryRepository extends CrudRepository<EmailHistoryEntity, Integer> {
 
-    Optional<EmailHistoryEntity> findTopByUsernameOrderBySentTimeDesc(String username);
-
     @Transactional
     @Modifying
     @Query("update EmailHistoryEntity  set attemptCount = attemptCount + 1 where id=?1")
     void incrementAttemptCountById(Long id);
+
+    Optional<EmailHistoryEntity> findTopByUsernameOrderBySentTimeDesc(String username);
 
 }

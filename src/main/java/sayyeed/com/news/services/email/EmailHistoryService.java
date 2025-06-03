@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import sayyeed.com.news.dtos.JwtDTO;
 import sayyeed.com.news.entities.EmailHistoryEntity;
 import sayyeed.com.news.enums.profile.ProfileStatusEnum;
+import sayyeed.com.news.exceptions.AppBadException;
 import sayyeed.com.news.repositories.EmailHistoryRepository;
 import sayyeed.com.news.services.profile.ProfileService;
 import sayyeed.com.news.utils.JwtUtil;
@@ -34,35 +35,20 @@ public class EmailHistoryService {
         repository.save(entity);
     }
 
-    public Boolean isEmailSend(String token) {
-        JwtDTO jwtDTO = JwtUtil.decode(token);
-         String username = jwtDTO.getUsername();
-         String code = jwtDTO.getCode();
+    public EmailHistoryEntity isEmailSent(String username) {
         Optional<EmailHistoryEntity> optional = repository.findTopByUsernameOrderBySentTimeDesc(username);
         if (optional.isEmpty()) {
-            return false;
+            throw new AppBadException("User doesn't exist");
         }
-        EmailHistoryEntity entity = optional.get();
+        return optional.get();
+    }
 
-        // expired time
-        LocalDateTime expiredTime = entity.getSentTime().plusMinutes(2);
-        if (LocalDateTime.now().isAfter(expiredTime)) {
-            return false;
-        }
+    public void incrementAttemptCountById(Long id) {
+        repository.incrementAttemptCountById(id);
+    }
+    // todo change verification login to another place
+    public Boolean isEmailSend(String token) {
 
-        // check attempt count
-        Integer attempts = entity.getAttemptCount();
-
-        // increase attempt count
-        repository.incrementAttemptCountById(entity.getId());
-
-        if (attempts >= 5) {
-            return false;
-        }
-        if (code.equals(entity.getCode())) {
-            profileService.setStatusByUsername(ProfileStatusEnum.ACTIVE, username);
-            return true;
-        }
         return false;
     }
 }

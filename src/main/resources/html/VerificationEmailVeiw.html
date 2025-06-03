@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verification</title>
+  </head>
+  <body
+    style="
+      background-color: #f3f3f3;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 30rem;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      "
+    >
+      <h1>This is Verification Email</h1>
+      <h4>You have 30 minutes to verify your email</h4>
+      <a
+        style="
+          background-color: #5bb1fa;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+          text-decoration: none;
+        "
+        href="http://localhost:8080/api/auth/registration/email/verification/%s"
+      >
+        Tap to confirm
+      </a>
+      <p style="color: #808080">If you get verified come back to website</p>
+    </div>
+  </body>
+</html>

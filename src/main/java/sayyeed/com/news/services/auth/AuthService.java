@@ -3,9 +3,11 @@ package sayyeed.com.news.services.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import sayyeed.com.news.dtos.JwtDTO;
 import sayyeed.com.news.dtos.auth.LoginDTO;
 import sayyeed.com.news.dtos.auth.RegistrationDTO;
 import sayyeed.com.news.dtos.profile.ProfileInfoDTO;
+import sayyeed.com.news.entities.EmailHistoryEntity;
 import sayyeed.com.news.entities.profile.ProfileEntity;
 import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 import sayyeed.com.news.enums.profile.ProfileStatusEnum;
@@ -15,7 +17,9 @@ import sayyeed.com.news.services.email.EmailHistoryService;
 import sayyeed.com.news.services.email.EmailSenderService;
 import sayyeed.com.news.services.profile.ProfileRoleService;
 import sayyeed.com.news.services.profile.ProfileService;
+import sayyeed.com.news.utils.JwtUtil;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -65,14 +69,35 @@ public class AuthService {
         profileRoleService.create(profile.getId(), ProfileRoleEnum.ROLE_USER);
 
         // send verificationCode
-        emailSenderService.sendVerificationLink(profile.getUsername());
+        emailSenderService.sendVerificationHtml(profile.getUsername());
 
         return "Verification Code sent!";
     }
 
     public String verificationByLink(String token) {
-        Boolean flag = emailHistoryService.isEmailSend(token);
-        if (flag == true) {
+        JwtDTO jwtDTO = JwtUtil.decode(token);
+        String username = jwtDTO.getUsername();
+        String code = jwtDTO.getCode();
+
+        EmailHistoryEntity entity = emailHistoryService.isEmailSent(username);
+
+        // expired time
+        LocalDateTime expiredTime = entity.getSentTime().plusMinutes(30);
+        if (LocalDateTime.now().isAfter(expiredTime)) {
+            return "Something went wrong!";
+        }
+
+        // check attempt count
+        Integer attempts = entity.getAttemptCount();
+
+        // increase attempt count
+        emailHistoryService.incrementAttemptCountById(entity.getId());
+
+        if (attempts >= 5) {
+            return "Something went wrong!";
+        }
+        if (code.equals(entity.getCode())) {
+            profileService.setStatusByUsername(ProfileStatusEnum.ACTIVE, username);
             return "Verification Success!";
         }
         return "Something went wrong!";
