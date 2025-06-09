@@ -75,7 +75,7 @@ public class AuthService {
     }
 
     public String verificationByLink(String token) {
-        JwtDTO jwtDTO = JwtUtil.decode(token);
+        JwtDTO jwtDTO = JwtUtil.decodeForRegister(token);
         String username = jwtDTO.getUsername();
         String code = jwtDTO.getCode();
 
@@ -118,7 +118,9 @@ public class AuthService {
         boolean flag = bCryptPasswordEncoder.matches(dto.getPassword(), entity.getPassword());
 
         if (flag) {
-            return profileService.toProfileInfoDto(entity);
+            ProfileInfoDTO responseDto  = profileService.toProfileInfoDto(entity);
+            responseDto.setJwt(JwtUtil.encode(responseDto.getUsername(), responseDto.getRoles()));
+            return responseDto;
         }
         throw new AppBadException("username or password wrong");
     }

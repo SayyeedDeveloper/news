@@ -48,7 +48,7 @@ public class EmailSenderService {
 
     public void sendVerificationHtml(String toAccount) {
         String code = CodeGenerator.fiveDigit();
-        String encodedToken = JwtUtil.encode(toAccount, code);
+        String encodedToken = JwtUtil.encodeForRegister(toAccount, code);
         String subject = "Verification Link !";
         String body = """
                 <!DOCTYPE html>

@@ -21,4 +21,5 @@ public class ProfileInfoDTO {
     private LocalDateTime createdDate;
     private String photoId;
     private List<ProfileRoleEnum> roles;
+    private String jwt;
 }
