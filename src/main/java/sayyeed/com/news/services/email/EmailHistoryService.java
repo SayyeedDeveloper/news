@@ -46,9 +46,4 @@ public class EmailHistoryService {
     public void incrementAttemptCountById(Long id) {
         repository.incrementAttemptCountById(id);
     }
-    // todo change verification login to another place
-    public Boolean isEmailSend(String token) {
-
-        return false;
-    }
 }

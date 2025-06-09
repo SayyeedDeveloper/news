@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import sayyeed.com.news.dtos.JwtDTO;
 import sayyeed.com.news.dtos.auth.LoginDTO;
 import sayyeed.com.news.dtos.auth.RegistrationDTO;
+import sayyeed.com.news.dtos.auth.VerificationBySmsDTO;
 import sayyeed.com.news.dtos.profile.ProfileInfoDTO;
 import sayyeed.com.news.entities.EmailHistoryEntity;
 import sayyeed.com.news.entities.profile.ProfileEntity;
+import sayyeed.com.news.entities.sms.SmsHistoryEntity;
 import sayyeed.com.news.enums.profile.ProfileRoleEnum;
 import sayyeed.com.news.enums.profile.ProfileStatusEnum;
 import sayyeed.com.news.exceptions.AppBadException;
@@ -17,6 +19,8 @@ import sayyeed.com.news.services.email.EmailHistoryService;
 import sayyeed.com.news.services.email.EmailSenderService;
 import sayyeed.com.news.services.profile.ProfileRoleService;
 import sayyeed.com.news.services.profile.ProfileService;
+import sayyeed.com.news.services.sms.SmsHistoryService;
+import sayyeed.com.news.services.sms.SmsSenderService;
 import sayyeed.com.news.utils.JwtUtil;
 
 import java.time.LocalDateTime;
@@ -39,12 +43,18 @@ public class AuthService {
 
     @Autowired
     private EmailHistoryService emailHistoryService;
+
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private SmsSenderService smsSenderService;
+
+    @Autowired
+    private SmsHistoryService smsHistoryService;
+
     public String registration(RegistrationDTO dto) {
         // 1. validation TODO in DTO class
-        // 2.   1213
         Optional<ProfileEntity> existOptional = profileRepository.findByUsernameAndVisibleTrue(dto.getUsername());
         if (existOptional.isPresent()) {
             ProfileEntity existsProfile = existOptional.get();
@@ -68,8 +78,13 @@ public class AuthService {
         // create profile roles
         profileRoleService.create(profile.getId(), ProfileRoleEnum.ROLE_USER);
 
-        // send verificationCode
-        emailSenderService.sendVerificationHtml(profile.getUsername());
+
+        if (dto.getUsername().contains("@")) {
+            emailSenderService.sendVerificationHtml(profile.getUsername());
+        } else {
+            smsSenderService.sendRegistrationSMS(profile.getUsername());
+        }
+
 
         return "Verification Code sent!";
     }
@@ -100,6 +115,35 @@ public class AuthService {
             profileService.setStatusByUsername(ProfileStatusEnum.ACTIVE, username);
             return "Verification Success!";
         }
+        return "Something went wrong!";
+    }
+
+    public String verificationBySms(VerificationBySmsDTO dto) {
+
+        SmsHistoryEntity smsHistoryEntity = smsHistoryService.getSmsByPhone(dto.getPhoneNumber());
+
+        // expired time
+        LocalDateTime expiredTime = smsHistoryEntity.getDateTime().plusMinutes(1);
+        // check time
+        if (LocalDateTime.now().isAfter(expiredTime)) {
+            return "Time Out!";
+        }
+
+        // get attempts
+        Integer attempts = smsHistoryEntity.getAttemptCount();
+
+        //increase attempt count
+        smsHistoryService.increaseAttempt(smsHistoryEntity.getId());
+
+        if (attempts >= 5) {
+            return "Too many attempts";
+        }
+
+        if (dto.getCode().equals(smsHistoryEntity.getCode())) {
+            profileService.setStatusByUsername(ProfileStatusEnum.ACTIVE, dto.getPhoneNumber());
+            return "Verification Success!";
+        }
+
         return "Something went wrong!";
     }
 
