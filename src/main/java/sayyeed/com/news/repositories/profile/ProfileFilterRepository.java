@@ -17,6 +17,7 @@ import java.util.Map;
 public class ProfileFilterRepository {
     @Autowired
     private EntityManager entityManager;
+
     public FilterResultDTO<ProfileEntity> filter (ProfileFilterDTO filterDTO, int page, int size){
 
         StringBuilder condition = new StringBuilder("where visible = true");

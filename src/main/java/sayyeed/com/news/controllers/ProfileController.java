@@ -30,9 +30,9 @@ public class ProfileController {
 
     @GetMapping("")
     public ResponseEntity<Page<ProfileInfoDTO>> getAll(
-            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
-        return ResponseEntity.ok(service.getAll(page, size));
+        return ResponseEntity.ok(service.getAll(page - 1, size));
     }
 
     @PostMapping("/filter")

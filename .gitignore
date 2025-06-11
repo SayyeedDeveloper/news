@@ -34,3 +34,4 @@ build/
 requirement.txt
 /src/main/resources/API Tests
 .env
+attaches
