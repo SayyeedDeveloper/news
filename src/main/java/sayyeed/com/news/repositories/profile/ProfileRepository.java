@@ -30,4 +30,6 @@ public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer
     @Modifying
     @Query("update ProfileEntity set status =?1 where username =?2")
     void setStatusByUsername(ProfileStatusEnum status, String username);
+
+    Optional<ProfileEntity> findByUsernameAndVisibleIsTrue(String username);
 }

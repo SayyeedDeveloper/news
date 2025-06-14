@@ -177,7 +177,6 @@ public class AttachService {
     }
 
     public String openURL(String fileName) {
-        System.out.println(appName);
         return appName + "/" + attachUrl + "/open/" + fileName;
     }
 }
