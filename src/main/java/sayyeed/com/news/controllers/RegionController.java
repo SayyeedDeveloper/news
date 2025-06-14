@@ -13,31 +13,32 @@ import sayyeed.com.news.services.RegionService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/region")
+@RequestMapping("/api/v1/region")
 public class RegionController {
 
     @Autowired
     private RegionService service;
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<RegionDTO> create(@Valid @RequestBody RegionDTO dto){
         return ResponseEntity.ok(service.create(dto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<RegionDTO> update(@PathVariable("id") Integer id, @RequestBody RegionDTO newDto){
         return ResponseEntity.ok(service.update(id, newDto));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id){
         return ResponseEntity.ok(service.delete(id));
     }
 
-    @GetMapping("")
+    @GetMapping("/admin")
     public ResponseEntity<List<RegionDTO>> get() {
         return ResponseEntity.ok(service.getAll());
     }
+
 
     @GetMapping("/lang")
     public ResponseEntity<List<LangResponseDTO>> getByLang(@RequestHeader(name = "Accept-Language", defaultValue = "UZ") AppLanguageEnum language) {

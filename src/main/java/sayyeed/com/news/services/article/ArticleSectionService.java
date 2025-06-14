@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.entities.article.ArticleSectionEntity;
 import sayyeed.com.news.exceptions.AppBadException;
+import sayyeed.com.news.repositories.article.ArticleRepository;
 import sayyeed.com.news.repositories.article.ArticleSectionRepository;
 import sayyeed.com.news.services.SectionService;
 

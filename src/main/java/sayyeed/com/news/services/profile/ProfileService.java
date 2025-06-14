@@ -84,7 +84,6 @@ public class ProfileService {
         return toProfileInfoDto(entity);
     }
 
-
     public Page<ProfileInfoDTO> getAll(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         Page<ProfileEntity> entities = repository.findAllByOrderByCreatedDateDesc(pageable);
@@ -98,6 +97,13 @@ public class ProfileService {
         return new PageImpl<ProfileInfoDTO>(dtos, pageable, totalElement);
     }
 
+    public ProfileEntity getByUsername(String username) {
+        Optional<ProfileEntity> optional = repository.findByUsernameAndVisibleTrue(username);
+        if (optional.isEmpty()) {
+            throw new AppBadException("User not found");
+        }
+        return optional.get();
+    }
 
     public Page<ProfileInfoDTO> filter(ProfileFilterDTO filterDTO, int page, int size){
         FilterResultDTO<ProfileEntity> result = filterRepository.filter(filterDTO, page, size);

@@ -43,7 +43,11 @@ public class SpringSecurityConfig {
                     authorizationManagerRequestMatcherRegistry
                             .requestMatchers("/attach/open/*").permitAll()
                             .requestMatchers("/api/auth/**").permitAll()
-                            .requestMatchers("/api/profile/**").hasRole("ADMIN")
+                            .requestMatchers("/api/v1/profile/admin","/api/v1/profile/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/api/v1/region/admin", "/api/v1/region/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/api/v1/category/admin", "/api/v1/category/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/api/v1/section/admin", "/api/v1/section/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/api/v1/article/moderator", "/api/v1/article/moderator/**").hasRole("MODERATOR")
                             .anyRequest()
                             .authenticated();
                 })
@@ -51,7 +55,7 @@ public class SpringSecurityConfig {
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling
                                 .accessDeniedHandler((request, response, accessDeniedException) -> {
-                                    response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
+                                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                                     response.getWriter().write("Access denied: " + accessDeniedException.getMessage());
                                 })
                 );

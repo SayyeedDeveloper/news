@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import sayyeed.com.news.entities.article.ArticleCategoryEntity;
 import sayyeed.com.news.exceptions.AppBadException;
 import sayyeed.com.news.repositories.article.ArticleCategoryRepository;
+import sayyeed.com.news.repositories.article.ArticleRepository;
 import sayyeed.com.news.services.CategoryService;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package sayyeed.com.news.entities.profile;
 
 import jakarta.persistence.*;
+import jdk.jfr.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
 import sayyeed.com.news.enums.profile.ProfileStatusEnum;

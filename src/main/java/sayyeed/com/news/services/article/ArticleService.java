@@ -2,13 +2,23 @@ package sayyeed.com.news.services.article;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sayyeed.com.news.dtos.JwtDTO;
 import sayyeed.com.news.dtos.article.ArticleCreateDTO;
 import sayyeed.com.news.dtos.article.ArticleInfoDTO;
 import sayyeed.com.news.dtos.article.ArticleUpdateDTO;
+import sayyeed.com.news.entities.CategoryEntity;
+import sayyeed.com.news.entities.RegionEntity;
+import sayyeed.com.news.entities.SectionEntity;
 import sayyeed.com.news.entities.article.ArticleEntity;
+import sayyeed.com.news.entities.profile.ProfileEntity;
 import sayyeed.com.news.enums.article.ArticleStatusEnum;
 import sayyeed.com.news.exceptions.AppBadException;
+import sayyeed.com.news.repositories.CategoryRepository;
+import sayyeed.com.news.repositories.RegionRepository;
+import sayyeed.com.news.repositories.SectionRepository;
 import sayyeed.com.news.repositories.article.ArticleRepository;
+import sayyeed.com.news.services.profile.ProfileService;
+import sayyeed.com.news.utils.JwtUtil;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -25,9 +35,52 @@ public class ArticleService {
     @Autowired
     private ArticleSectionService articleSectionService;
 
+    @Autowired
+    private ProfileService profileService;
 
-    public ArticleInfoDTO create(ArticleCreateDTO createDTO){
+    @Autowired
+    private RegionRepository regionRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private SectionRepository sectionRepository;
+
+
+    public ArticleInfoDTO create(ArticleCreateDTO createDTO, String token){
+        // cleaning token
+        String cleanToken = token.substring(7).trim();
+        JwtDTO jwtDTO = JwtUtil.decode(cleanToken);
+
+        //checking the region
+        Optional<RegionEntity> optional = regionRepository.findByIdAndVisibleIsTrue(createDTO.getRegionId());
+        if (optional.isEmpty()) {
+            throw new AppBadException("Region not found");
+        }
+
+        for (Integer categoryId : createDTO.getCategories()) {
+            Optional<CategoryEntity> categoryOptional = categoryRepository.findByIdAndVisibleIsTrue(categoryId);
+            if (categoryOptional.isEmpty()) {
+                throw new AppBadException("Category " + categoryId + " not found");
+            }
+        }
+
+        for (Integer sectionId : createDTO.getSections()) {
+            Optional<SectionEntity> sectionOptional = sectionRepository.findByIdAndVisibleIsTrue(sectionId);
+            if (sectionOptional.isEmpty()) {
+                throw new AppBadException("Section " + sectionId + " not found");
+            }
+        }
+
+        // getting moderator user
+        ProfileEntity profileEntity = profileService.getByUsername(jwtDTO.getUsername());
+
         ArticleEntity entity = new ArticleEntity();
+
+        //set moderator id
+        entity.setModeratorId(entity.getId());
+
         // Basic article properties
         entity.setTitle(createDTO.getTitle());
         entity.setDescription(createDTO.getDescription());

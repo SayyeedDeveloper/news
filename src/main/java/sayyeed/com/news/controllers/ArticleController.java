@@ -10,23 +10,25 @@ import sayyeed.com.news.dtos.article.ArticleUpdateDTO;
 import sayyeed.com.news.services.article.ArticleService;
 
 @RestController
-@RequestMapping("/api/article")
+@RequestMapping("/api/v1/article")
 public class ArticleController {
 
     @Autowired
     private ArticleService service;
 
-    @PostMapping("")
-    public ResponseEntity<ArticleInfoDTO> create(@Valid @RequestBody ArticleCreateDTO createDTO) {
-        return ResponseEntity.ok(service.create(createDTO));
+    @PostMapping("/moderator")
+    public ResponseEntity<ArticleInfoDTO> create(
+            @Valid @RequestBody ArticleCreateDTO createDTO,
+            @RequestHeader(name = "Authorization") String token) {
+        return ResponseEntity.ok(service.create(createDTO, token));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/moderator/{id}")
     public ResponseEntity<ArticleInfoDTO> update(@Valid @RequestBody ArticleUpdateDTO updateDTO, @PathVariable Integer id) {
         return ResponseEntity.ok(service.update(id, updateDTO));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/moderator/{id}")
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.deleteArticle(id));
     }

@@ -12,29 +12,29 @@ import sayyeed.com.news.services.SectionService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/section")
+@RequestMapping("/api/v1/section")
 
 public class SectionController {
 
     @Autowired
     private SectionService service;
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<SectionDTO> create(@Valid @RequestBody SectionDTO dto){
         return ResponseEntity.ok(service.create(dto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<SectionDTO> update(@PathVariable Integer id,@RequestBody SectionDTO dto){
         return ResponseEntity.ok(service.update(id, dto));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id){
         return ResponseEntity.ok(service.delete(id));
     }
 
-    @GetMapping("")
+    @GetMapping("/admin")
     public ResponseEntity<List<SectionDTO>> getAllByOrder(){
         return ResponseEntity.ok(service.getAllByOrder());
     }

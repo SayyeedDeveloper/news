@@ -73,6 +73,7 @@ public class AuthService {
         profile.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
         profile.setVisible(true);
         profile.setStatus(ProfileStatusEnum.NOT_ACTIVE);
+        profile.setCreatedDate(LocalDateTime.now());
         profileRepository.save(profile);
 
         // create profile roles

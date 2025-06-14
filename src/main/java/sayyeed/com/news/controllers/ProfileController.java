@@ -12,18 +12,18 @@ import sayyeed.com.news.dtos.profile.ProfileUpdateDTO;
 import sayyeed.com.news.services.profile.ProfileService;
 
 @RestController
-@RequestMapping("/api/profile")
+@RequestMapping("/api/v1/profile")
 public class ProfileController {
 
     @Autowired
     private ProfileService service;
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<ProfileInfoDTO> create(@RequestBody @Valid ProfileCreateDTO dto){
         return ResponseEntity.ok(service.create(dto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<ProfileInfoDTO> update(@PathVariable Integer id,@Valid @RequestBody ProfileUpdateDTO dto){
         return ResponseEntity.ok(service.update(id, dto));
     }
