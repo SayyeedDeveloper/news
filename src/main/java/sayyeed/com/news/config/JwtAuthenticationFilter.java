@@ -12,16 +12,26 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import sayyeed.com.news.dtos.JwtDTO;
 import sayyeed.com.news.utils.JwtUtil;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
+    @Override
+    public boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+        return Arrays
+                .stream(SpringSecurityConfig.openApiList)
+                .anyMatch(p -> pathMatcher.match(p, request.getServletPath()));
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

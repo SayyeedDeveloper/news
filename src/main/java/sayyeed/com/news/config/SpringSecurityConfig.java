@@ -29,6 +29,11 @@ public class SpringSecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    public static String[] openApiList = {
+            "/attach/open/*",
+            "/api/auth/**"
+    };
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -41,8 +46,7 @@ public class SpringSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
                     authorizationManagerRequestMatcherRegistry
-                            .requestMatchers("/attach/open/*").permitAll()
-                            .requestMatchers("/api/auth/**").permitAll()
+                            .requestMatchers(openApiList).permitAll()
                             .requestMatchers("/api/v1/profile/admin","/api/v1/profile/admin/**").hasRole("ADMIN")
                             .requestMatchers("/api/v1/region/admin", "/api/v1/region/admin/**").hasRole("ADMIN")
                             .requestMatchers("/api/v1/category/admin", "/api/v1/category/admin/**").hasRole("ADMIN")
