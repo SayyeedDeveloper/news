@@ -1,8 +1,14 @@
 package sayyeed.com.news.services.article;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import sayyeed.com.news.dtos.JwtDTO;
+import sayyeed.com.news.dtos.CategoryDTO;
+import sayyeed.com.news.dtos.SectionDTO;
+import sayyeed.com.news.dtos.article.ArticleChangeStatusDTO;
 import sayyeed.com.news.dtos.article.ArticleCreateDTO;
 import sayyeed.com.news.dtos.article.ArticleInfoDTO;
 import sayyeed.com.news.dtos.article.ArticleUpdateDTO;
@@ -17,10 +23,12 @@ import sayyeed.com.news.repositories.CategoryRepository;
 import sayyeed.com.news.repositories.RegionRepository;
 import sayyeed.com.news.repositories.SectionRepository;
 import sayyeed.com.news.repositories.article.ArticleRepository;
-import sayyeed.com.news.services.profile.ProfileService;
-import sayyeed.com.news.utils.JwtUtil;
+import sayyeed.com.news.services.AttachService;
+import sayyeed.com.news.utils.SpringSecurityUtil;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,9 +44,6 @@ public class ArticleService {
     private ArticleSectionService articleSectionService;
 
     @Autowired
-    private ProfileService profileService;
-
-    @Autowired
     private RegionRepository regionRepository;
 
     @Autowired
@@ -47,11 +52,11 @@ public class ArticleService {
     @Autowired
     private SectionRepository sectionRepository;
 
+    @Autowired
+    private AttachService attachService;
 
-    public ArticleInfoDTO create(ArticleCreateDTO createDTO, String token){
-        // cleaning token
-        String cleanToken = token.substring(7).trim();
-        JwtDTO jwtDTO = JwtUtil.decode(cleanToken);
+
+    public ArticleInfoDTO create(ArticleCreateDTO createDTO){
 
         //checking the region
         Optional<RegionEntity> optional = regionRepository.findByIdAndVisibleIsTrue(createDTO.getRegionId());
@@ -59,27 +64,31 @@ public class ArticleService {
             throw new AppBadException("Region not found");
         }
 
-        for (Integer categoryId : createDTO.getCategories()) {
-            Optional<CategoryEntity> categoryOptional = categoryRepository.findByIdAndVisibleIsTrue(categoryId);
+        // checking category
+        for (CategoryDTO categoryDTO : createDTO.getCategories()) {
+            Optional<CategoryEntity> categoryOptional = categoryRepository.findByIdAndVisibleIsTrue(categoryDTO.getId());
             if (categoryOptional.isEmpty()) {
-                throw new AppBadException("Category " + categoryId + " not found");
+                throw new AppBadException("Category " + categoryDTO.getId() + " not found");
             }
         }
 
-        for (Integer sectionId : createDTO.getSections()) {
-            Optional<SectionEntity> sectionOptional = sectionRepository.findByIdAndVisibleIsTrue(sectionId);
+        // checking section
+        for (SectionDTO sectionDTO : createDTO.getSections()) {
+            Optional<SectionEntity> sectionOptional = sectionRepository.findByIdAndVisibleIsTrue(sectionDTO.getId());
             if (sectionOptional.isEmpty()) {
-                throw new AppBadException("Section " + sectionId + " not found");
+                throw new AppBadException("Section " + sectionDTO.getId() + " not found");
             }
         }
 
-        // getting moderator user
-        ProfileEntity profileEntity = profileService.getByUsername(jwtDTO.getUsername());
+        // Check if the image exists in the attachment table
+        if (createDTO.getImageId() != null && !createDTO.getImageId().isEmpty()) {
+            boolean imageExists = attachService.isImageExists(createDTO.getImageId());
+            if (!imageExists) {
+                throw new AppBadException("Image with ID '" + createDTO.getImageId() + "' not found. Please upload the image first.");
+            }
+        }
 
         ArticleEntity entity = new ArticleEntity();
-
-        //set moderator id
-        entity.setModeratorId(entity.getId());
 
         // Basic article properties
         entity.setTitle(createDTO.getTitle());
@@ -92,6 +101,10 @@ public class ArticleService {
         entity.setVisible(true);
         entity.setViewCount(0);
         entity.setSharedCount(0);
+        entity.setReadTime(createDTO.getReadTime());
+
+        // setting moderator id
+        entity.setModeratorId(SpringSecurityUtil.currentProfileId());
 
         repository.save(entity);
 
@@ -105,14 +118,52 @@ public class ArticleService {
     }
 
     public ArticleInfoDTO update(Integer id, ArticleUpdateDTO updateDTO){
+        // checking article existence
         Optional<ArticleEntity> optional = repository.findById(id);
         if (optional.isEmpty()) {
             throw new AppBadException("Article not found");
         }
+
+        // checking region
+        Optional<RegionEntity> regionOptinal = regionRepository.findByIdAndVisibleIsTrue(updateDTO.getRegionId());
+        if (regionOptinal.isEmpty()) {
+            throw new AppBadException("Region not found");
+        }
+
+        // checking category
+        for (CategoryDTO categoryDTO : updateDTO.getCategories()) {
+            Optional<CategoryEntity> categoryOptional = categoryRepository.findByIdAndVisibleIsTrue(categoryDTO.getId());
+            if (categoryOptional.isEmpty()) {
+                throw new AppBadException("Category " + categoryDTO.getId() + " not found");
+            }
+        }
+
+        // checking section
+        for (SectionDTO sectionDTO : updateDTO.getSections()) {
+            Optional<SectionEntity> sectionOptional = sectionRepository.findByIdAndVisibleIsTrue(sectionDTO.getId());
+            if (sectionOptional.isEmpty()) {
+                throw new AppBadException("Section " + sectionDTO.getId() + " not found");
+            }
+        }
+
         ArticleEntity entity = optional.get();
+
+        // basic properties
         entity.setTitle(updateDTO.getTitle());
         entity.setDescription(updateDTO.getDescription());
         entity.setContent(updateDTO.getContent());
+        entity.setStatus(ArticleStatusEnum.NOT_PUBLISHED);
+        entity.setReadTime(updateDTO.getReadTime());
+
+        // remove image and update image if changed
+        if (!entity.getImageId().equals(updateDTO.getImageId())) {
+            boolean imageExists = attachService.isImageExists(updateDTO.getImageId());
+            if (!imageExists) {
+                throw new AppBadException("Image not exists");
+            }
+            attachService.delete(entity.getImageId());
+        }
+
         entity.setImageId(updateDTO.getImageId());
         entity.setRegionId(updateDTO.getRegionId());
 
@@ -140,8 +191,33 @@ public class ArticleService {
         // delete Article from ArticleSection table
         articleSectionService.deleteArticleSectionByArticleId(id);
 
+        // delete image
+        attachService.delete(optional.get().getImageId());
+
         repository.delete(optional.get());
         return "Article deleted successfully";
+    }
+
+    public String changeStatus(ArticleChangeStatusDTO dto) {
+        Optional<ArticleEntity> optional = repository.findById(dto.getId());
+        if (optional.isEmpty()) {
+            throw new AppBadException("Article not found");
+        }
+        repository.changeStatusById(dto.getStatus(), dto.getId());
+        return "Success";
+    }
+
+    public Page<ArticleInfoDTO> getArticlesBySection(int sectionId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ArticleEntity> entities = repository.getArticleBySectionId(sectionId, pageable);
+
+        List<ArticleEntity> entityList = entities.getContent();
+        long totalElement = entities.getTotalElements();
+
+        List<ArticleInfoDTO> dtos = new LinkedList<>();
+        entityList.forEach( entity -> dtos.add(toArticleInfoDTO(entity)));
+
+        return new PageImpl<>(dtos, pageable, totalElement);
     }
 
     public ArticleInfoDTO toArticleInfoDTO(ArticleEntity entity){

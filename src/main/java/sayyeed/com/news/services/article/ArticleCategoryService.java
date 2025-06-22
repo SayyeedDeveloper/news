@@ -2,10 +2,10 @@ package sayyeed.com.news.services.article;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sayyeed.com.news.dtos.CategoryDTO;
 import sayyeed.com.news.entities.article.ArticleCategoryEntity;
 import sayyeed.com.news.exceptions.AppBadException;
 import sayyeed.com.news.repositories.article.ArticleCategoryRepository;
-import sayyeed.com.news.repositories.article.ArticleRepository;
 import sayyeed.com.news.services.CategoryService;
 
 import java.util.List;
@@ -19,19 +19,13 @@ public class ArticleCategoryService {
     @Autowired
     private CategoryService categoryService;
 
-    public void merge(Integer articleId, List<Integer> categoryIds){
-
-        List<Integer> allAvailableCategories = categoryService.getAllCategoryIds();
-
-        for (Integer id: categoryIds){
-            if (!allAvailableCategories.contains(id)){
-                throw new AppBadException("Category " + id + " not Found");
-            }
-        }
+    public void merge(Integer articleId, List<CategoryDTO> dtoList){
+        // changing DTO list into List of IDs
+        List<Integer> newList = dtoList.stream().map(CategoryDTO::getId).toList();
 
         List<Integer> oldList = repository.getCategoryIdsByArticleId(articleId);
-        categoryIds.stream().filter(newId -> !oldList.contains(newId)).forEach( cId -> create(articleId, cId));
-        oldList.stream().filter(oldId -> !categoryIds.contains(oldId)).forEach(cId -> repository.deleteByArticleIdAndCategoryId(articleId, cId));
+        newList.stream().filter(newId -> !oldList.contains(newId)).forEach( cId -> create(articleId, cId));
+        oldList.stream().filter(oldId -> !newList.contains(oldId)).forEach(cId -> repository.deleteByArticleIdAndCategoryId(articleId, cId));
     }
 
     public void create(Integer articleId, Integer categoryId){

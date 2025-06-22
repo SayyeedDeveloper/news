@@ -27,6 +27,7 @@ public class ProfileCreateDTO {
     @NotBlank(message = "Password required")
     private String password;
 
+
     private ProfileStatusEnum status;
 
     private LocalDateTime createdDate;

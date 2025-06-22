@@ -129,10 +129,11 @@ public class AttachService {
                 throw new AppBadException("Could not delete file from filesystem");
             }
 
-            attachRepository.delete(entity);
+            attachRepository.setVisibleFalse(entity.getId());
             return true;
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new AppBadException("Something went wrong");
         }
     }
@@ -147,6 +148,14 @@ public class AttachService {
         List<AttachDTO> dtos = new LinkedList<>();
         entityList.forEach( e -> dtos.add(toDTO(e)));
         return new PageImpl<>(dtos, pageable, totalElement);
+    }
+
+    public Boolean isImageExists(String id){
+        Optional<AttachEntity> imageOptional = attachRepository.findByIdAndVisibleTrue(id);
+        if (imageOptional.isEmpty()) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     private String getYmDString() {

@@ -31,7 +31,8 @@ public class SpringSecurityConfig {
 
     public static String[] openApiList = {
             "/attach/open/*",
-            "/api/auth/**"
+            "/api/auth/**",
+            "/api/v1/article/section/**"
     };
 
     @Bean
@@ -52,6 +53,7 @@ public class SpringSecurityConfig {
                             .requestMatchers("/api/v1/category/admin", "/api/v1/category/admin/**").hasRole("ADMIN")
                             .requestMatchers("/api/v1/section/admin", "/api/v1/section/admin/**").hasRole("ADMIN")
                             .requestMatchers("/api/v1/article/moderator", "/api/v1/article/moderator/**").hasRole("MODERATOR")
+                            .requestMatchers("/api/v1/article/publisher", "/api/v1/article/publisher/**").hasRole("PUBLISHER")
                             .anyRequest()
                             .authenticated();
                 })

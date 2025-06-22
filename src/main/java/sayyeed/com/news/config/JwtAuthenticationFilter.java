@@ -55,12 +55,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response); // Continue the filter chain
         } catch (JwtException | UsernameNotFoundException e) {
-            /*filterChain.doFilter(request, response);*/ // Continue the filter chain
-            //return;
+            // Send unauthorized response for JWT or user exceptions
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid or expired token: " + e.getMessage());
+            // Don't continue the filter chain for unauthorized requests
         }
-
-
     }
 }
-
-
