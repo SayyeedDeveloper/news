@@ -1,8 +1,6 @@
 package sayyeed.com.news.entities;
 
 import jakarta.persistence.*;
-import jdk.jfr.Timespan;
-import jdk.jfr.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
 

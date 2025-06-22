@@ -149,7 +149,6 @@ public class AuthService {
     }
 
     public ProfileInfoDTO login(LoginDTO dto) {
-
         Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(dto.getUsername());
         if (optional.isEmpty()){
             throw new AppBadException("username or password wrong");

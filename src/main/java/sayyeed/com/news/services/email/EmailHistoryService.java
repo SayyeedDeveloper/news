@@ -2,13 +2,9 @@ package sayyeed.com.news.services.email;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sayyeed.com.news.dtos.JwtDTO;
 import sayyeed.com.news.entities.EmailHistoryEntity;
-import sayyeed.com.news.enums.profile.ProfileStatusEnum;
 import sayyeed.com.news.exceptions.AppBadException;
 import sayyeed.com.news.repositories.EmailHistoryRepository;
-import sayyeed.com.news.services.profile.ProfileService;
-import sayyeed.com.news.utils.JwtUtil;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -19,8 +15,6 @@ public class EmailHistoryService {
     @Autowired
     private EmailHistoryRepository repository;
 
-    @Autowired
-    private ProfileService profileService;
 
     public void save(String body, String code, String toUsername) {
         EmailHistoryEntity entity = new EmailHistoryEntity();
