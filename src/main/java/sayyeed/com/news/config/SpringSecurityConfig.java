@@ -33,6 +33,8 @@ public class SpringSecurityConfig {
             "/attach/open/*",
             "/api/auth/**",
             "/api/v1/article/section/**",
+            "/api/v1/article/region/**",
+            "/api/v1/article/category/**",
             "/api/v1/article/published/latest"
     };
 

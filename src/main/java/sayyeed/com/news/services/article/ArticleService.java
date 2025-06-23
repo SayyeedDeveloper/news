@@ -232,6 +232,32 @@ public class ArticleService {
         return new PageImpl<>(dtos, pageable, totalElement);
     }
 
+    public Page<ArticleShortInfoDTO> getArticlesByRegion(int regionId, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ArticleEntity> entities = repository.getArticleByRegionId(regionId, pageable);
+
+        List<ArticleEntity> entityList = entities.getContent();
+        long totalElement = entities.getTotalElements();
+
+        List<ArticleShortInfoDTO> dtos = new LinkedList<>();
+        entityList.forEach( entity -> dtos.add(toArticleShortInfoDTO(entity)));
+
+        return new PageImpl<>(dtos, pageable, totalElement);
+    }
+
+    public Page<ArticleShortInfoDTO> getArticlesByCategory(int categoryId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ArticleEntity> entities = repository.getArticleByCategoryId(categoryId, pageable);
+
+        List<ArticleEntity> entityList = entities.getContent();
+        long totalElement = entities.getTotalElements();
+
+        List<ArticleShortInfoDTO> dtos = new LinkedList<>();
+        entityList.forEach( entity -> dtos.add(toArticleShortInfoDTO(entity)));
+
+        return new PageImpl<>(dtos, pageable, totalElement);
+    }
+
     public ArticleInfoDTO toArticleInfoDTO(ArticleEntity entity){
         ArticleInfoDTO dto = new ArticleInfoDTO();
         dto.setId(entity.getId());

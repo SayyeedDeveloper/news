@@ -54,4 +54,22 @@ public class ArticleController {
     ) {
         return ResponseEntity.ok(service.getLatestPublishedArticles(dto, page - 1, size));
     }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<ArticleShortInfoDTO>> getArticlesByCategory(
+            @PathVariable() Integer categoryId,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ){
+        return ResponseEntity.ok(service.getArticlesByCategory(categoryId, page-1, size));
+    }
+
+    @GetMapping("/region/{regionId}")
+    public ResponseEntity<Page<ArticleShortInfoDTO>> getArticlesByRegion(
+            @PathVariable() Integer regionId,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ){
+        return ResponseEntity.ok(service.getArticlesByRegion(regionId, page-1, size));
+    }
 }
