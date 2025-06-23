@@ -9,6 +9,8 @@ import org.springframework.data.repository.CrudRepository;
 import sayyeed.com.news.entities.article.ArticleEntity;
 import sayyeed.com.news.enums.article.ArticleStatusEnum;
 
+import java.util.List;
+
 public interface ArticleRepository extends CrudRepository<ArticleEntity, Integer> {
     @Modifying
     @Transactional
@@ -17,4 +19,8 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, Integer
 
     @Query("SELECT a FROM ArticleEntity a JOIN a.articleSections s WHERE a.visible = true AND s.sectionId = :sectionId ORDER BY a.createdDate DESC")
     Page<ArticleEntity> getArticleBySectionId(Integer sectionId, Pageable pageable);
+
+    @Query("from ArticleEntity where id not in :excludeIds order by createdDate desc")
+    List<ArticleEntity> findLatestPublishedArticlesExcept(List<Integer> excludeIds, Pageable pageable);
+
 }

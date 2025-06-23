@@ -32,7 +32,8 @@ public class SpringSecurityConfig {
     public static String[] openApiList = {
             "/attach/open/*",
             "/api/auth/**",
-            "/api/v1/article/section/**"
+            "/api/v1/article/section/**",
+            "/api/v1/article/published/latest"
     };
 
     @Bean

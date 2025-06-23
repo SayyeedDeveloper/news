@@ -8,15 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.dtos.CategoryDTO;
 import sayyeed.com.news.dtos.SectionDTO;
-import sayyeed.com.news.dtos.article.ArticleChangeStatusDTO;
-import sayyeed.com.news.dtos.article.ArticleCreateDTO;
-import sayyeed.com.news.dtos.article.ArticleInfoDTO;
-import sayyeed.com.news.dtos.article.ArticleUpdateDTO;
+import sayyeed.com.news.dtos.article.*;
 import sayyeed.com.news.entities.CategoryEntity;
 import sayyeed.com.news.entities.RegionEntity;
 import sayyeed.com.news.entities.SectionEntity;
 import sayyeed.com.news.entities.article.ArticleEntity;
-import sayyeed.com.news.entities.profile.ProfileEntity;
 import sayyeed.com.news.enums.article.ArticleStatusEnum;
 import sayyeed.com.news.exceptions.AppBadException;
 import sayyeed.com.news.repositories.CategoryRepository;
@@ -218,6 +214,18 @@ public class ArticleService {
         entityList.forEach( entity -> dtos.add(toArticleInfoDTO(entity)));
 
         return new PageImpl<>(dtos, pageable, totalElement);
+    }
+
+    public List<ArticleInfoDTO> getLatestPublishedArticles(ArticleLastPublishedDTO dto) {
+        List<Integer> excludeIds = dto.getExcludeIds().stream().map(ArticleInfoDTO::getId).toList();
+
+        Pageable pageable = PageRequest.of(0, dto.getLimit());
+        List<ArticleEntity> articleEntities = repository.findLatestPublishedArticlesExcept(excludeIds, pageable);
+
+        List<ArticleInfoDTO> dtos = new LinkedList<>();
+        articleEntities.forEach(entity -> dtos.add(toArticleInfoDTO(entity)));
+
+        return dtos;
     }
 
     public ArticleInfoDTO toArticleInfoDTO(ArticleEntity entity){

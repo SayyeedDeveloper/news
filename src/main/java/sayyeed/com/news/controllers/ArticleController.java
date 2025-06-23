@@ -5,11 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sayyeed.com.news.dtos.article.ArticleChangeStatusDTO;
-import sayyeed.com.news.dtos.article.ArticleCreateDTO;
-import sayyeed.com.news.dtos.article.ArticleInfoDTO;
-import sayyeed.com.news.dtos.article.ArticleUpdateDTO;
+import sayyeed.com.news.dtos.article.*;
 import sayyeed.com.news.services.article.ArticleService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/article")
@@ -47,4 +46,10 @@ public class ArticleController {
         return ResponseEntity.ok(service.getArticlesBySection(sectionId, page-1, size));
     }
 
+    @PostMapping("published/latest")
+    public ResponseEntity<List<ArticleInfoDTO>> getLatestPublishedArticles(
+            @RequestBody ArticleLastPublishedDTO dto
+    ) {
+        return ResponseEntity.ok(service.getLatestPublishedArticles(dto));
+    }
 }
