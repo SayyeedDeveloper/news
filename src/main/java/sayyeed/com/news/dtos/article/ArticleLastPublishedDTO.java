@@ -9,5 +9,4 @@ import java.util.List;
 @Setter
 public class ArticleLastPublishedDTO {
     private List<ArticleInfoDTO> excludeIds;
-    private int limit;
 }

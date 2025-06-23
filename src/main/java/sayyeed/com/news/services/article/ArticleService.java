@@ -199,33 +199,37 @@ public class ArticleService {
         if (optional.isEmpty()) {
             throw new AppBadException("Article not found");
         }
-        repository.changeStatusById(dto.getStatus(), dto.getId());
+        repository.changeStatusById(dto.getStatus(), dto.getId(), LocalDateTime.now());
         return "Success";
     }
 
-    public Page<ArticleInfoDTO> getArticlesBySection(int sectionId, int page, int size) {
+    public Page<ArticleShortInfoDTO> getArticlesBySection(int sectionId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ArticleEntity> entities = repository.getArticleBySectionId(sectionId, pageable);
 
         List<ArticleEntity> entityList = entities.getContent();
         long totalElement = entities.getTotalElements();
 
-        List<ArticleInfoDTO> dtos = new LinkedList<>();
-        entityList.forEach( entity -> dtos.add(toArticleInfoDTO(entity)));
+        List<ArticleShortInfoDTO> dtos = new LinkedList<>();
+        entityList.forEach( entity -> dtos.add(toArticleShortInfoDTO(entity)));
 
         return new PageImpl<>(dtos, pageable, totalElement);
     }
 
-    public List<ArticleInfoDTO> getLatestPublishedArticles(ArticleLastPublishedDTO dto) {
+    public Page<ArticleShortInfoDTO> getLatestPublishedArticles(ArticleLastPublishedDTO dto, int page, int size) {
+
         List<Integer> excludeIds = dto.getExcludeIds().stream().map(ArticleInfoDTO::getId).toList();
 
-        Pageable pageable = PageRequest.of(0, dto.getLimit());
-        List<ArticleEntity> articleEntities = repository.findLatestPublishedArticlesExcept(excludeIds, pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ArticleEntity> articleEntities = repository.findLatestPublishedArticlesExcept(excludeIds, pageable);
 
-        List<ArticleInfoDTO> dtos = new LinkedList<>();
-        articleEntities.forEach(entity -> dtos.add(toArticleInfoDTO(entity)));
+        List<ArticleEntity> entityList = articleEntities.getContent();
+        long totalElement = articleEntities.getTotalElements();
 
-        return dtos;
+        List<ArticleShortInfoDTO> dtos = new LinkedList<>();
+        articleEntities.forEach(entity -> dtos.add(toArticleShortInfoDTO(entity)));
+
+        return new PageImpl<>(dtos, pageable, totalElement);
     }
 
     public ArticleInfoDTO toArticleInfoDTO(ArticleEntity entity){
@@ -242,5 +246,15 @@ public class ArticleService {
         dto.setCategories(articleCategoryService.getCategoryIds(entity.getId()));
         dto.setSections(articleSectionService.getSectionIdsByArticleId(entity.getId()));
         return dto;
+    }
+
+    public ArticleShortInfoDTO toArticleShortInfoDTO(ArticleEntity entity) {
+        ArticleShortInfoDTO articleShortInfoDTO = new ArticleShortInfoDTO();
+        articleShortInfoDTO.setId(entity.getId());
+        articleShortInfoDTO.setTitle(entity.getTitle());
+        articleShortInfoDTO.setDescription(entity.getDescription());
+        articleShortInfoDTO.setImageId(entity.getImageId());
+        articleShortInfoDTO.setPublishedDate(entity.getPublishedDate());
+        return articleShortInfoDTO;
     }
 }

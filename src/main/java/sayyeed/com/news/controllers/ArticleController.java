@@ -38,7 +38,7 @@ public class ArticleController {
     }
 
     @GetMapping("/section/{sectionId}")
-    public ResponseEntity<Page<ArticleInfoDTO>> getArticlesBySection(
+    public ResponseEntity<Page<ArticleShortInfoDTO>> getArticlesBySection(
             @PathVariable() Integer sectionId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "5") int size
@@ -47,9 +47,11 @@ public class ArticleController {
     }
 
     @PostMapping("published/latest")
-    public ResponseEntity<List<ArticleInfoDTO>> getLatestPublishedArticles(
-            @RequestBody ArticleLastPublishedDTO dto
+    public ResponseEntity<Page<ArticleShortInfoDTO>> getLatestPublishedArticles(
+            @RequestBody ArticleLastPublishedDTO dto,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
     ) {
-        return ResponseEntity.ok(service.getLatestPublishedArticles(dto));
+        return ResponseEntity.ok(service.getLatestPublishedArticles(dto, page - 1, size));
     }
 }
