@@ -76,11 +76,11 @@ public class ArticleEntity {
     @Column
     private Boolean visible = Boolean.TRUE;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ArticleCategoryEntity> articleCategories = new ArrayList<>();
-
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ArticleSectionEntity> articleSections = new ArrayList<>();
+//    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ArticleCategoryEntity> articleCategories = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ArticleSectionEntity> articleSections = new ArrayList<>();
 
 
     //todo: update article entity

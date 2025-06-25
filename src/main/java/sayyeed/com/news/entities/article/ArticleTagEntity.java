@@ -17,7 +17,7 @@ public class ArticleTagEntity {
     @Column(name = "tag_name")
     private String tagName;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_name")
+    @JoinColumn(name = "tag_name", insertable = false, updatable = false)
     private TagEntity tag;
 
     @Column(name = "article_id")

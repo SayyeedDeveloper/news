@@ -26,7 +26,7 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, Integer
     // Replace direct limit in JPQL with Pageable
     @Query("select a.id as id, a.title as title, a.description as description, a.imageId as imageId, a.publishedDate as publishedDate " +
             "from ArticleEntity a " +
-            "inner join ArticleSectionEntity ac " +
+            "inner join ArticleSectionEntity ac on a.id = ac.articleId " +
             "where ac.sectionId = ?1 and a.visible = true and a.status = 'PUBLISHED' " +
             "order by a.createdDate desc")
     List<ArticleShortInfo> getArticleBySectionId(Integer sectionId, Pageable pageable);
@@ -40,7 +40,7 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, Integer
 
     @Query("select a.id as id, a.title as title, a.description as description, a.imageId as imageId, a.publishedDate as publishedDate " +
             "from ArticleEntity a " +
-            "inner join ArticleCategoryEntity ac " +
+            "inner join ArticleCategoryEntity ac on a.id = ac.articleId " +
             "where ac.categoryId = ?1 and a.visible = true and a.status = 'PUBLISHED' " +
             "order by a.createdDate desc")
     List<ArticleShortInfo> getArticleByCategoryId(Integer categoryId, Pageable pageable);
