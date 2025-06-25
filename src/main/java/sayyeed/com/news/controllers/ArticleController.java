@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sayyeed.com.news.dtos.article.*;
+import sayyeed.com.news.mapper.ArticleShortInfo;
 import sayyeed.com.news.services.article.ArticleService;
 
 import java.util.List;
@@ -38,38 +39,45 @@ public class ArticleController {
     }
 
     @GetMapping("/section/{sectionId}")
-    public ResponseEntity<Page<ArticleShortInfoDTO>> getArticlesBySection(
+    public ResponseEntity<List<ArticleInfoDTO>> getArticlesBySection(
             @PathVariable() Integer sectionId,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size
-    ){
-        return ResponseEntity.ok(service.getArticlesBySection(sectionId, page-1, size));
+            @RequestParam(value = "limit", defaultValue = "5") int limit
+    ) {
+        return ResponseEntity.ok(service.getArticlesBySection(sectionId, limit));
     }
 
     @PostMapping("published/latest")
-    public ResponseEntity<Page<ArticleShortInfoDTO>> getLatestPublishedArticles(
+    public ResponseEntity<List<ArticleInfoDTO>> getLatestPublishedArticles(
             @RequestBody ArticleLastPublishedDTO dto,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size
+            @RequestParam(value = "limit", defaultValue = "12") int limit
     ) {
-        return ResponseEntity.ok(service.getLatestPublishedArticles(dto, page - 1, size));
+        return ResponseEntity.ok(service.getLatestPublishedArticles(dto, limit));
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<Page<ArticleShortInfoDTO>> getArticlesByCategory(
+    public ResponseEntity<List<ArticleInfoDTO>> getArticlesByCategory(
             @PathVariable() Integer categoryId,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size
-    ){
-        return ResponseEntity.ok(service.getArticlesByCategory(categoryId, page-1, size));
+            @RequestParam(value = "size", defaultValue = "5") int limit
+    ) {
+        return ResponseEntity.ok(service.getArticlesByCategory(categoryId, limit));
     }
 
     @GetMapping("/region/{regionId}")
-    public ResponseEntity<Page<ArticleShortInfoDTO>> getArticlesByRegion(
+    public ResponseEntity<Page<ArticleInfoDTO>> getArticlesByRegion(
             @PathVariable() Integer regionId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "5") int size
-    ){
-        return ResponseEntity.ok(service.getArticlesByRegion(regionId, page-1, size));
+    ) {
+        return ResponseEntity.ok(service.getArticlesByRegion(regionId, page - 1, size));
     }
+
+    @PostMapping("/pulished/filter")
+    public ResponseEntity<Page<ArticleShortInfo>> filter(
+            @RequestBody ArticleFilterDTO dto,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size
+            ) {
+        return ResponseEntity.ok(service.filter(dto, page - 1, size));
+    }
+
 }

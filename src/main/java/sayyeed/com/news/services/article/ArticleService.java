@@ -1,10 +1,7 @@
 package sayyeed.com.news.services.article;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import sayyeed.com.news.dtos.CategoryDTO;
 import sayyeed.com.news.dtos.SectionDTO;
@@ -15,6 +12,7 @@ import sayyeed.com.news.entities.SectionEntity;
 import sayyeed.com.news.entities.article.ArticleEntity;
 import sayyeed.com.news.enums.article.ArticleStatusEnum;
 import sayyeed.com.news.exceptions.AppBadException;
+import sayyeed.com.news.mapper.ArticleShortInfo;
 import sayyeed.com.news.repositories.CategoryRepository;
 import sayyeed.com.news.repositories.RegionRepository;
 import sayyeed.com.news.repositories.SectionRepository;
@@ -203,59 +201,64 @@ public class ArticleService {
         return "Success";
     }
 
-    public Page<ArticleShortInfoDTO> getArticlesBySection(int sectionId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ArticleEntity> entities = repository.getArticleBySectionId(sectionId, pageable);
+    public List<ArticleInfoDTO> getArticlesBySection(int sectionId, int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<ArticleShortInfo> list = repository.getArticleBySectionId(sectionId, pageable);
 
-        List<ArticleEntity> entityList = entities.getContent();
-        long totalElement = entities.getTotalElements();
+        List<ArticleInfoDTO> dtos = new LinkedList<>();
+        list.forEach( mapper -> dtos.add(toDTO(mapper)));
 
-        List<ArticleShortInfoDTO> dtos = new LinkedList<>();
-        entityList.forEach( entity -> dtos.add(toArticleShortInfoDTO(entity)));
-
-        return new PageImpl<>(dtos, pageable, totalElement);
+        return dtos;
     }
 
-    public Page<ArticleShortInfoDTO> getLatestPublishedArticles(ArticleLastPublishedDTO dto, int page, int size) {
-
+    public List<ArticleInfoDTO> getLatestPublishedArticles(ArticleLastPublishedDTO dto, int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
         List<Integer> excludeIds = dto.getExcludeIds().stream().map(ArticleInfoDTO::getId).toList();
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ArticleEntity> articleEntities = repository.findLatestPublishedArticlesExcept(excludeIds, pageable);
+        List<ArticleShortInfo> articleShortInfos = repository.findLatestPublishedArticlesExcept(excludeIds, pageable);
 
-        List<ArticleEntity> entityList = articleEntities.getContent();
-        long totalElement = articleEntities.getTotalElements();
+        List<ArticleInfoDTO> dtos = new LinkedList<>();
+        articleShortInfos.forEach(mapper -> dtos.add(toDTO(mapper)));
 
-        List<ArticleShortInfoDTO> dtos = new LinkedList<>();
-        articleEntities.forEach(entity -> dtos.add(toArticleShortInfoDTO(entity)));
-
-        return new PageImpl<>(dtos, pageable, totalElement);
+        return dtos;
     }
 
-    public Page<ArticleShortInfoDTO> getArticlesByRegion(int regionId, int page, int size){
+
+    public List<ArticleInfoDTO> getArticlesByCategory(int categoryId, int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+
+        List<ArticleShortInfo> mapperList = repository.getArticleByCategoryId(categoryId, pageable);
+        List<ArticleInfoDTO> dtos = new LinkedList<>();
+        mapperList.forEach( mapper -> dtos.add(toDTO(mapper)));
+
+        return dtos;
+    }
+
+    public Page<ArticleInfoDTO> getArticlesByRegion(int regionId, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         Page<ArticleEntity> entities = repository.getArticleByRegionId(regionId, pageable);
 
         List<ArticleEntity> entityList = entities.getContent();
         long totalElement = entities.getTotalElements();
 
-        List<ArticleShortInfoDTO> dtos = new LinkedList<>();
-        entityList.forEach( entity -> dtos.add(toArticleShortInfoDTO(entity)));
+        List<ArticleInfoDTO> dtos = new LinkedList<>();
+        entityList.forEach( entity -> dtos.add(toArticleInfoDTO(entity)));
 
         return new PageImpl<>(dtos, pageable, totalElement);
     }
 
-    public Page<ArticleShortInfoDTO> getArticlesByCategory(int categoryId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ArticleEntity> entities = repository.getArticleByCategoryId(categoryId, pageable);
+    public Page<ArticleShortInfo> filter(ArticleFilterDTO dto, int page, int size) {
+        return null;
+    }
 
-        List<ArticleEntity> entityList = entities.getContent();
-        long totalElement = entities.getTotalElements();
-
-        List<ArticleShortInfoDTO> dtos = new LinkedList<>();
-        entityList.forEach( entity -> dtos.add(toArticleShortInfoDTO(entity)));
-
-        return new PageImpl<>(dtos, pageable, totalElement);
+    private ArticleInfoDTO toDTO(ArticleShortInfo mapper) {
+        ArticleInfoDTO dto = new ArticleInfoDTO();
+        dto.setId(mapper.getId());
+        dto.setTitle(mapper.getTitle());
+        dto.setDescription(mapper.getDescription());
+        dto.setImage(attachService.openDTO(mapper.getImageId()));
+        dto.setPublishedDate(mapper.getPublishedDate());
+        return dto;
     }
 
     public ArticleInfoDTO toArticleInfoDTO(ArticleEntity entity){
@@ -272,15 +275,5 @@ public class ArticleService {
         dto.setCategories(articleCategoryService.getCategoryIds(entity.getId()));
         dto.setSections(articleSectionService.getSectionIdsByArticleId(entity.getId()));
         return dto;
-    }
-
-    public ArticleShortInfoDTO toArticleShortInfoDTO(ArticleEntity entity) {
-        ArticleShortInfoDTO articleShortInfoDTO = new ArticleShortInfoDTO();
-        articleShortInfoDTO.setId(entity.getId());
-        articleShortInfoDTO.setTitle(entity.getTitle());
-        articleShortInfoDTO.setDescription(entity.getDescription());
-        articleShortInfoDTO.setImageId(entity.getImageId());
-        articleShortInfoDTO.setPublishedDate(entity.getPublishedDate());
-        return articleShortInfoDTO;
     }
 }

@@ -188,4 +188,11 @@ public class AttachService {
     public String openURL(String fileName) {
         return appName + "/" + attachUrl + "/open/" + fileName;
     }
+
+    public AttachDTO openDTO(String id) {
+        AttachDTO dto = new AttachDTO();
+        dto.setId(id);
+        dto.setUrl(openURL(id));
+        return dto;
+    }
 }
